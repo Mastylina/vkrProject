@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReservationController!{% endblock %}
+
+{% block body %}
+    <h1> {{ data.dateReservation|date('Y-m-d') }}</h1>
+
+    {% for time in times %}
+        {% if (checkedThisDay == true) %}
+            {% if (time > thisTime) and (time != 'occupied') %}
+                <a href="{{ path('app_reservation_info', {'worker': data.worker.id ,'service': data.service.id,'date': data.dateReservation|date('Y-m-d'), 'time':time}) }}" class="btn btn-primary">{{ time }} </a>
+            {% endif %}
+        {% elseif time != 'occupied' %}
+            <a href="{{ path('app_reservation_info', {'worker': data.worker.id, 'service': data.service.id,'date': data.dateReservation|date('Y-m-d'), 'time':time}) }}" class="btn btn-primary">{{ time }} </a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
