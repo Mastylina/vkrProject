@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feedback index{% endblock %}
+
+{% block body %}
+    <h1>Feedback index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Text</th>
+                <th>DateAndTime</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feedback in feedback %}
+            <tr>
+                <td>{{ feedback.id }}</td>
+                <td>{{ feedback.text }}</td>
+                <td>{{ feedback.dateAndTime ? feedback.dateAndTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_feedback_show', {'id': feedback.id}) }}">show</a>
+                    <a href="{{ path('app_feedback_edit', {'id': feedback.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

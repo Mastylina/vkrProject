@@ -19,6 +19,12 @@ class Feedback
     #[ORM\Column(type: 'datetime')]
     private $dateAndTime;
 
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'feedbacks')]
+    private $service;
+
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'feedbacks')]
+    private $worker;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +50,30 @@ class Feedback
     public function setDateAndTime(\DateTimeInterface $dateAndTime): self
     {
         $this->dateAndTime = $dateAndTime;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): self
+    {
+        $this->service = $service;
+
+        return $this;
+    }
+
+    public function getWorker(): ?Worker
+    {
+        return $this->worker;
+    }
+
+    public function setWorker(?Worker $worker): self
+    {
+        $this->worker = $worker;
 
         return $this;
     }

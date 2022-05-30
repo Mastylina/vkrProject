@@ -9,8 +9,9 @@
         <a>{{reservation.id}}</a>
         <a>{{reservation.endTime|date('H:i')}}</a>
         <a>{{reservation.startTime|date('H:i')}}</a>
-<a>{{reservation.dateReservation|date('Y-m-d')}}</a>
+        <a>{{reservation.dateReservation|date('Y-m-d')}}</a>
         <a>{{reservation.service.name}}</a>
         <a>{{reservation.worker.userWorker.name}}</a>
+        <a href="{{ path('app_reservation') }}">back to list</a>
     </div>
 {% endblock %}

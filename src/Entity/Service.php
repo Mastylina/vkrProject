@@ -36,10 +36,14 @@ class Service
     #[ORM\ManyToMany(targetEntity: Worker::class, mappedBy: 'services')]
     private $workers;
 
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Feedback::class)]
+    private $feedbacks;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->workers = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,5 +171,35 @@ class Service
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks[] = $feedback;
+            $feedback->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getService() === $this) {
+                $feedback->setService(null);
+            }
+        }
+
+        return $this;
     }
 }

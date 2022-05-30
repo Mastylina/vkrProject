@@ -37,6 +37,9 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private $worker;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $comment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,6 +126,18 @@ class Reservation
     public function setWorker(?Worker $worker): self
     {
         $this->worker = $worker;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

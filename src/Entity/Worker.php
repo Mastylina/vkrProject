@@ -31,10 +31,14 @@ class Worker
     #[ORM\OneToOne(mappedBy: 'worker', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $userWorker;
 
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Feedback::class)]
+    private $feedbacks;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,5 +148,35 @@ class Worker
     public function __toString(): string
     {
         return $this->userWorker->getName() ;
+    }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks[] = $feedback;
+            $feedback->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getWorker() === $this) {
+                $feedback->setWorker(null);
+            }
+        }
+
+        return $this;
     }
 }

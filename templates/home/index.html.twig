@@ -6,6 +6,8 @@
     <p>Email: {{ app.user.email }}</p>
 {% endif %}
     <a href="{{ path('app_logout') }}">Выход</a>
-
+    <a href="{{ path('app_feedback_index') }}">Отзывы</a>
     <a href="{{ path('app_reservation') }}">Записаться</a>
+    <a href="{{ path('app_about') }}">О нас</a>
+    <a href="{{ path('app_service_index') }}">Услуги</a>
 {% endblock %}
