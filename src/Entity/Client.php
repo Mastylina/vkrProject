@@ -21,11 +21,23 @@ class Client
     #[ORM\OneToOne(mappedBy: 'client', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $userClient;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Feedback::class)]
+    private $feedbacks;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedbackWorker::class)]
+    private $feedbackWorkers;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
+        $this->feedbackWorkers = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->id;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +91,66 @@ class Client
         }
 
         $this->userClient = $userClient;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks[] = $feedback;
+            $feedback->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getClient() === $this) {
+                $feedback->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackWorker>
+     */
+    public function getFeedbackWorkers(): Collection
+    {
+        return $this->feedbackWorkers;
+    }
+
+    public function addFeedbackWorker(FeedbackWorker $feedbackWorker): self
+    {
+        if (!$this->feedbackWorkers->contains($feedbackWorker)) {
+            $this->feedbackWorkers[] = $feedbackWorker;
+            $feedbackWorker->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackWorker(FeedbackWorker $feedbackWorker): self
+    {
+        if ($this->feedbackWorkers->removeElement($feedbackWorker)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackWorker->getClient() === $this) {
+                $feedbackWorker->setClient(null);
+            }
+        }
 
         return $this;
     }

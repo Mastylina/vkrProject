@@ -34,6 +34,7 @@ class RegistrationController extends AbstractController
                 )
             );
             $user->setClient($client);
+            $user->setRoles(['ROLE_CLIENT']);
             $entityManager->persist($user);
             $entityManager->flush();
             $clientRepository->add($client);

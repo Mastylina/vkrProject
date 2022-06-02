@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Reservation;
 use App\Entity\Service;
 use App\Entity\Worker;
@@ -9,10 +10,17 @@ use App\Form\InfoReservationType;
 use App\Form\ReservationType;
 use App\Repository\ClientRepository;
 use App\Repository\ReservationRepository;
+use App\Repository\WorkerRepository;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ReservationController extends AbstractController
 {
@@ -50,15 +58,18 @@ class ReservationController extends AbstractController
             '16:00', '16:30', '17:00', '17:30', '18:00',
             '18:30', '19:00', '19:30', '20:00', '20:30',
         );
+        $test[]=0;
         foreach ($reservations as $reservation) {
-            $key = array_search($reservation->getStartTime()->format('H:i'), $arrayTime);
-            if ($key !== false) {
-                while ($arrayTime[$key] !== $reservation->getEndTime()->format('H:i')) {
+            $key = array_search($reservation->getStartTime()->format('H:i'), $arrayTime);//находим индекс начала записи
+            $test[]=$key;
+            if ($key !== false) {//если нашли
+                    while ($arrayTime[$key] !== $reservation->getEndTime()->format('H:i')) {//проставляем пометку 'ocupied' пока не дойдем до времени конца бронирования
+                        $arrayTime[$key] = 'occupied';
+                        $key++;
+                    }
                     $arrayTime[$key] = 'occupied';
-                    $key++;
                 }
-                $arrayTime[$key] = 'occupied';
-            }
+
         }
         //рассчитываем сколько отрезков в 30 мин занимает процедура
         $timeWork = $data->getService()->getExecutionTime();
@@ -97,7 +108,7 @@ class ReservationController extends AbstractController
      * @throws \Doctrine\ORM\Exception\ORMException
      */
     #[Route('reservation/{worker}/{service}/{date}/{time}', name: 'app_reservation_info')]
-    public function insertIntoBD(Request $request,  Worker $worker, Service $service,$date,$time, ReservationRepository $repository): Response
+    public function insertIntoBD(Request $request,  Worker $worker, Service $service,$date,$time, ReservationRepository $repository, MailerInterface $mailer): Response
     {
         $arrayTime = array(
             '11:00', '11:30', '12:00', '12:30', '13:00',
@@ -126,8 +137,17 @@ class ReservationController extends AbstractController
         $reservation->setDateReservation(new \DateTime($date));
         $form = $this->createForm(InfoReservationType::class, $reservation);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->add($reservation);
+            $email = (new Email())
+                ->from('annyasotovii12345@gmail.com')
+                ->to($this->getUser()->getEmail())
+                ->subject('Time for Symfony Mailer!')
+                ->text('Sending emails is fun again!');
+
+            $mailer->send($email);
+
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -136,10 +156,40 @@ class ReservationController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/reportPDFWorkerSchedule', name: 'app_schedule_report', methods: ['GET'])]
+    public function report(ReservationRepository $reservationRepository): Response
+    {
 
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'arial');
 
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
 
+        // Retrieve the HTML generated in our twig file
+        $schedules = $reservationRepository->findByWorkerSchedule(date ('Y-m-d'),$this->getUser()->getWorker()->getId());
+        $html = $this->renderView('reservation/reportPDF.html.twig', [
+            'schedules' => $schedules,
+        ]);
 
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html,'UTF-8');
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("mypdf.pdf", [
+            "Attachment" => true
+        ]);
+        return $this->render('reservation/reportPDF.html.twig', [
+            'schedules' => $reservationRepository->findByWorkerSchedule(date ('Y-m-d'),$this->getUser()->getWorker()->getId()),
+        ]);
+    }
 
     #[Route('reservation/{id}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, ReservationRepository $reservationRepository): Response
@@ -147,7 +197,24 @@ class ReservationController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
             $reservationRepository->remove($reservation, true);
         }
+        $client = $this->getUser()->getClient();
+        return $this->redirectToRoute('app_reservation_client',  ['client' => $client ], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('reservation/client/{client}', name: 'app_reservation_client', methods: ['GET',])]
+    public function reservationClient(Client $client, ReservationRepository $reservationRepository): Response
+    {
+        $reservationsFuture = $reservationRepository->findByClientFuture($client);
+        $reservationsPast = $reservationRepository->findByClientPast($client);
+        $reservationsCurrent1 =$reservationRepository->findByClientCurrent1($client);
+        $reservationsCurrent2 =$reservationRepository->findByClientCurrent2($client);
+        $reservationsCurrent3 =$reservationRepository->findByClientCurrent3($client);
 
-        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('reservation/reservationClient.html.twig', [
+            'reservationsFuture' => $reservationsFuture,
+            'reservationsPast' => $reservationsPast,
+            'reservationsCurrent1' => $reservationsCurrent1,
+            'reservationsCurrent2' => $reservationsCurrent2,
+            'reservationsCurrent3' => $reservationsCurrent3,
+        ]);
     }
 }

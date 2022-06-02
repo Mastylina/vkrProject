@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\FeedbackRepository;
+use App\Repository\FeedbackWorkerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: FeedbackRepository::class)]
-class Feedback
+#[ORM\Entity(repositoryClass: FeedbackWorkerRepository::class)]
+class FeedbackWorker
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,15 +19,16 @@ class Feedback
     #[ORM\Column(type: 'datetime')]
     private $dateAndTime;
 
-    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'feedbacks')]
-    private $service;
-
     #[ORM\Column(type: 'integer')]
     private $estimation;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'feedbacks')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'feedbackWorkers')]
     #[ORM\JoinColumn(nullable: false)]
     private $client;
+
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'feedbackWorkers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $worker;
 
     public function getId(): ?int
     {
@@ -58,18 +59,6 @@ class Feedback
         return $this;
     }
 
-    public function getService(): ?Service
-    {
-        return $this->service;
-    }
-
-    public function setService(?Service $service): self
-    {
-        $this->service = $service;
-
-        return $this;
-    }
-
     public function getEstimation(): ?int
     {
         return $this->estimation;
@@ -90,6 +79,18 @@ class Feedback
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getWorker(): ?Worker
+    {
+        return $this->worker;
+    }
+
+    public function setWorker(?Worker $worker): self
+    {
+        $this->worker = $worker;
 
         return $this;
     }

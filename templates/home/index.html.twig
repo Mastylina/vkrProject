@@ -1,13 +1,46 @@
 {% extends 'base.html.twig' %}
+{% block body %}
+<body>
+<section>
+    <blockquote>
+        <p>
+            “QUISQUE IN ENIM VELIT, AT DIGNISSIM EST. NULLA UL CORPER, DOLOR AC PELLENTESQUE PLACERAT, JUSTO TELLUS
+            GRAVIDA ERAT, VEL PORTTITOR LIBERO ERAT.”
+        </p>
+        <cite>John Doe, Lorem Ipsum</cite>
+    </blockquote>
+    <p>Lorem ipsum dolor sit amet…</p>
+    <p>Donec vel nisl nibh…</p>
+    <p>Donec vel nisl nibh…</p>
+    <figure>
+        <img src="" width="320" height="175" alt="">
+    </figure>
+    <figure>
+        <img src="" width="320" height="175" alt="">
+    </figure>
+    <h2>Наша команда</h2>
+    <div class="team-row">
+        <figure>
+            <img src="images/sample.png" width="96" height="96" alt="">
+            <figcaption>John Doe<span>ceo</span></figcaption>
+        </figure>
+        <figure>
+            <img src="images/sample.png" width="96" height="96" alt="">
+            <figcaption>Saundra Pittsley<span>team leader</span></figcaption>
+        </figure>
+        …
+    </div>
+    <div class="team-row">
+        <figure>
+            <img src="images/sample.png" width="96" height="96" alt="">
+            <figcaption>Ericka Nobriga<span>art director</span></figcaption>
+        </figure>
+        <figure>
+            <img src="images/sample.png" width="96" height="96" alt="">
+            <figcaption>Cody Rousselle<span>senior ui designer</span></figcaption>
+        </figure>
+    </div>
+</section>
+</body>
 
-{% block title %}Hello HomeController!{% endblock %}
-
-{% block body %} {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <p>Email: {{ app.user.email }}</p>
-{% endif %}
-    <a href="{{ path('app_logout') }}">Выход</a>
-    <a href="{{ path('app_feedback_index') }}">Отзывы</a>
-    <a href="{{ path('app_reservation') }}">Записаться</a>
-    <a href="{{ path('app_about') }}">О нас</a>
-    <a href="{{ path('app_service_index') }}">Услуги</a>
 {% endblock %}

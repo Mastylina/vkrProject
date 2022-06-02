@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\FeedbackWorker;
 use App\Entity\Worker;
 use App\Form\WorkerType;
+use App\Form\FeedbackWorkerType;
+use App\Repository\FeedbackWorkerRepository;
 use App\Repository\WorkerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +33,6 @@ class WorkerController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $workerRepository->add($worker, true);
-
             return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -40,11 +42,24 @@ class WorkerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_worker_show', methods: ['GET'])]
-    public function show(Worker $worker): Response
+    #[Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
+    public function show(Worker $worker,  Request $request, FeedbackWorkerRepository $feedbackWorkerRepository): Response
     {
-        return $this->render('worker/show.html.twig', [
+        $feedback = new FeedbackWorker();
+        $form = $this->createForm(FeedbackWorkerType::class, $feedback);
+        $form->handleRequest($request);
+        $feedbacks=$worker->getFeedbackWorkers();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $feedback->setClient($this->getUser()->getClient());
+            $feedback->setDateAndTime(new \DateTime());
+            $feedback->setWorker($worker);
+            $feedbackWorkerRepository->add($feedback, true);
+            return $this->redirectToRoute('app_worker_show', ['id' => $worker->getId()], Response::HTTP_SEE_OTHER);
+        }
+        return $this->renderForm('worker/show.html.twig', [
             'worker' => $worker,
+            'feedbacks' => $feedbacks,
+            'form' => $form,
         ]);
     }
 

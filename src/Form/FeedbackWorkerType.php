@@ -2,13 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\Feedback;
+use App\Entity\FeedbackWorker;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class FeedbackType extends AbstractType
+class FeedbackWorkerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -21,7 +21,7 @@ class FeedbackType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Feedback::class,
+            'data_class' => FeedbackWorker::class,
         ]);
     }
 }

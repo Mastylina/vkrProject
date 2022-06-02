@@ -31,14 +31,16 @@ class Worker
     #[ORM\OneToOne(mappedBy: 'worker', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $userWorker;
 
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Feedback::class)]
-    private $feedbacks;
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: FeedbackWorker::class)]
+    private $feedbackWorkers;
+
 
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
+        $this->feedbackWorkers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,29 +153,29 @@ class Worker
     }
 
     /**
-     * @return Collection<int, Feedback>
+     * @return Collection<int, FeedbackWorker>
      */
-    public function getFeedbacks(): Collection
+    public function getFeedbackWorkers(): Collection
     {
-        return $this->feedbacks;
+        return $this->feedbackWorkers;
     }
 
-    public function addFeedback(Feedback $feedback): self
+    public function addFeedbackWorker(FeedbackWorker $feedbackWorker): self
     {
-        if (!$this->feedbacks->contains($feedback)) {
-            $this->feedbacks[] = $feedback;
-            $feedback->setWorker($this);
+        if (!$this->feedbackWorkers->contains($feedbackWorker)) {
+            $this->feedbackWorkers[] = $feedbackWorker;
+            $feedbackWorker->setWorker($this);
         }
 
         return $this;
     }
 
-    public function removeFeedback(Feedback $feedback): self
+    public function removeFeedbackWorker(FeedbackWorker $feedbackWorker): self
     {
-        if ($this->feedbacks->removeElement($feedback)) {
+        if ($this->feedbackWorkers->removeElement($feedbackWorker)) {
             // set the owning side to null (unless already changed)
-            if ($feedback->getWorker() === $this) {
-                $feedback->setWorker(null);
+            if ($feedbackWorker->getWorker() === $this) {
+                $feedbackWorker->setWorker(null);
             }
         }
 

@@ -14,4 +14,5 @@
             <a href="{{ path('app_reservation_info', {'worker': data.worker.id, 'service': data.service.id,'date': data.dateReservation|date('Y-m-d'), 'time':time}) }}" class="btn btn-primary">{{ time }} </a>
         {% endif %}
     {% endfor %}
+
 {% endblock %}

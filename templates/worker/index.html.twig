@@ -3,33 +3,27 @@
 {% block title %}Worker index{% endblock %}
 
 {% block body %}
-    <h1>Worker index</h1>
+    <div class="container-fluid">
+        <h1>Работники студии</h1>
+        <div class="row">
+            {% for worker in workers %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Photo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for worker in workers %}
-            <tr>
-                <td>{{ worker.id }}</td>
-                <td>{{ worker.photo }}</td>
-                <td>
-                    <a href="{{ path('app_worker_show', {'id': worker.id}) }}">show</a>
-                    <a href="{{ path('app_worker_edit', {'id': worker.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                <div class="col-sm-6 my-md-2">
+                    <div class="card">
+                        <img class="card-img-top text-center" src="{{worker.photo}}"  style="width:200px;" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ worker.userWorker.name }}</h5>
+                            <p class="card-text">{{ worker.post.name }}</p>
+                            <a href="{{ path('app_worker_show', {'id': worker.id}) }}" class="card-link">Пройти</a>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                Услуг не найдено
+            {% endfor %}
+        </div>
+    </div>
 
     <a href="{{ path('app_worker_new') }}">Create new</a>
 {% endblock %}

@@ -12,10 +12,169 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-
     </head>
     <body>
+    <div class="container">
+        <header></header>
+        <nav>
+            <ul class="top-menu">
+                <li><a href="/">Главная страница</a></li>
+                <li><a href="/service/">Предоставляемые услуги</a></li>
+                <li><a href="/worker">Наши работники</a></li>
+                <li><a href="/about">О нас</a></li>
+                <li><a href="">Акции</a></li>
+
+                {% if is_granted('ROLE_WORKER') %}
+                    <li><a href="{{ path('app_schedule_report') }}">График работы</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_CLIENT') %}
+                    <li><a href="/reservation">Записаться</a></li>
+                    <li><a href="{{path('app_reservation_client' , {'client' : app.user.client})}}">Мои записи</a></li>
+                {% endif %}
+                {% if app.user %}
+                    <li><a href="/message">Сообщения</a></li>
+                    <li><a href="/logout">Выход</a></li>
+                    <h5>Приветствуем Вас на нашем сайте, {{ app.user.surname }} {{ app.user.name }}</h5>
+                {% else %}
+                    <li><a href="/register">Регистрация</a></li>
+                    <li><a href="/login">Вход</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <aside></aside>
+        <section></section>
+    </div>
+    <footer></footer>
         {% block body %}{% endblock %}
     </body>
 </html>
+<style>
+    #wrapper {
+        max-width: 960px;
+        margin: auto;
+    }
+    header {
+        padding: 20px 0;
+    }
+    body {
+        color: #8f8f8f;
+        font: 12px Tahoma, sans-serif;
+        background-color: #f8f8f8;
+        border-top: 5px solid #7e7e7e;
+        margin: 0;
+    }
+    input[type="text"] {
+        background-color: #f3f3f3;
+        border: 1px solid #e7e7e7;
+        height: 30px;
+        color: #b2b2b2;
+        padding: 0 10px;
+        vertical-align: top;
+    }
+    button {
+        color: #fff;
+        background-color: #29c5e6;
+        border: none;
+        height: 32px;
+        font-family: 'Oswald', sans-serif;
+    }
+    p {
+        margin: 20px 0;
+    }
+    nav a {
+        text-decoration: none;
+    }
+    nav li {
+        list-style-position: inside;
+        font: 14px 'Oswald', sans-serif;
+
+    }
+
+    .top-menu li {
+        display: inline-block;
+        padding: 10px 30px;
+    }
+
+
+    .top-menu a {
+        color: #AAAAAA;
+    }
+    blockquote {
+        margin: 0;
+        background: #29c5e6;
+        padding: 10px 20px;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 300;
+    }
+
+    blockquote p {
+        color: #fff;
+        font-style: italic;
+        font-size: 33px;
+        margin: 0;
+    }
+
+    blockquote cite {
+        display: block;
+        font-size: 20px;
+        font-style: normal;
+        color: #1d8ea6;
+        margin: 0;
+        text-align: right;
+    }
+    figure {
+        display: inline-block;
+        margin: 0;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 300;
+    }
+
+    figure img {
+        display: block;
+        border: 1px solid #fff;
+        outline: 1px solid #c9c9c9;
+    }
+
+    figure figcaption {
+        font-size: 16px;
+        font-weight: 300;
+        margin-top: 5px;
+    }
+
+    figure figcaption span {
+        display: block;
+        font-size: 14px;
+        color: #29c5e6;
+    }
+    section > figure + figure {
+        margin-left: 28px;
+    }
+    section > h2 {
+        background: #29c5e6;
+        font: 30px 'Oswald', sans-serif;
+        font-weight: 300;
+        color: #fff;
+        padding: 0 10px;
+        margin: 30px 0 0 0;
+    }
+    figure figcaption {
+        font-size: 16px;
+        font-weight: 300;
+        margin-top: 5px;
+    }
+
+    figure div {
+        font-size: 14px;
+        color: #29c5e6;
+    }
+
+    .team-row figure {
+        margin-top: 20px;
+    }
+
+    .team-row figure + figure {
+        margin-left: 43px;
+    }
+</style>
 

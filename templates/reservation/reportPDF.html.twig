@@ -1,0 +1,30 @@
+
+
+{% block body %}
+    <h1 align="center">График работы</h1>
+
+    <table align="center" class="table">
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Время начала процедуры</th>
+            <th>Время конца процедуры</th>
+            <th>Услуга</th>
+            <th>Мастер</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for schedule in schedules %}
+            <tr>
+                <td>{{ schedule.dateReservation|date('Y-m-d') }}</td>
+                <td>{{ schedule.startTime|date('H:i') }}</td>
+                <td>{{ schedule.endTime|date('H:i') }}</td>
+                <td>{{ schedule.service.name}}</td>
+                <td>{{ schedule.worker.userWorker.name}}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

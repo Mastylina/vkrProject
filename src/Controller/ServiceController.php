@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Feedback;
 use App\Entity\Service;
 use App\Entity\Worker;
+use App\Entity\Client;
+use App\Form\FeedbackType;
+use App\Repository\FeedbackRepository;
 use App\Repository\WorkerRepository;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -79,14 +83,26 @@ class ServiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_service_show', methods: ['GET'])]
-    public function show(Service $service): Response
+    #[Route('/{id}', name: 'app_service_show', methods: ['GET', 'POST'])]
+    public function show(Service $service, Request $request, FeedbackRepository $feedbackRepository): Response
     {
+        $feedback = new Feedback();
+        $form = $this->createForm(FeedbackType::class, $feedback);
+        $form->handleRequest($request);
+        $feedbacks=$service->getFeedbacks();
         $workers=$service->getWorkers();
-        return $this->render('service/show.html.twig', [
+        if ($form->isSubmitted() && $form->isValid()) {
+            $feedback->setClient($this->getUser()->getClient());
+            $feedback->setDateAndTime(new \DateTime());
+            $feedback->setService($service);
+            $feedbackRepository->add($feedback, true);
+            return $this->redirectToRoute('app_service_show', ['id' => $service->getId()], Response::HTTP_SEE_OTHER);
+        }
+        return $this->renderForm('service/show.html.twig', [
             'service' => $service,
             'workers' => $workers,
-
+            'feedbacks' => $feedbacks,
+            'form' => $form,
         ]);
     }
 

@@ -18,6 +18,21 @@
         </tbody>
     </table>
 
+    <h5>Отзывы</h5>
+    <o>
+        {% for feedback in feedbacks %}
+            <li>
+                <p>{{feedback.client.userClient.name}}
+                    {{feedback.text}}
+                    {{feedback.estimation}}
+                    {{feedback.dateAndTime|date('Y-m-d H:i')}}
+                </p></li>
+        {% else %}
+            <h4>Нет отзывов</h4>
+        {% endfor %}
+    </o>
+    <h1>Добавить отзыв</h1>
+    {{ include('feedback/_form.html.twig') }}
     <a href="{{ path('app_worker_index') }}">back to list</a>
 
     <a href="{{ path('app_worker_edit', {'id': worker.id}) }}">edit</a>
