@@ -5,8 +5,6 @@
 {% block body %}
     {{ include('reservation/_form.html.twig') }}
     <div class="container">
-        <h1> Информация о записи</h1>
-        <a>{{reservation.id}}</a>
         <a>{{reservation.endTime|date('H:i')}}</a>
         <a>{{reservation.startTime|date('H:i')}}</a>
         <a>{{reservation.dateReservation|date('Y-m-d')}}</a>

@@ -11,17 +11,21 @@
             <h3>Предыдущие записи:</h3>
             {% for reservation in reservationsPast %}
 
-                <p class="text-info">{{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>{{ reservation.startTime|date('H:i') }}</p>
+                <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
+                <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                <p>Ваш комментарий {{ reservation.comment }}</p>
+                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
 
             {% endfor %}
 
             {#если есть сегоднешние записи которые прошли#}
                 {% for reservation in reservationsCurrent1 %}
-
-                    <p class="text-info">{{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                    <p>{{ reservation.startTime|date('H:i') }}</p>
-
+                    <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                    <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
+                    <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                    <p>Ваш комментарий {{ reservation.comment }}</p>
+                    <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
                 {% endfor %}
         {% endif %}
 
@@ -29,10 +33,11 @@
         {% if reservationsCurrent2 %}
             <h3>Текущие записи:</h3>
             {% for reservation in reservationsCurrent2 %}
-
-                <p class="text-info">{{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>{{ reservation.startTime|date('H:i') }}</p>
-
+                <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
+                <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                <p>Ваш комментарий {{ reservation.comment }}</p>
+                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
             {% endfor %}
         {% endif %}
 
@@ -42,23 +47,22 @@
 
             {#если есть сегоднешние записи которые предстоят#}
                 {% for reservation in reservationsCurrent3 %}
-
-                    <p class="text-info">{{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                    <p>{{ reservation.startTime|date('H:i') }}</p>
+                    <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                    <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
+                    <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                    <p>Ваш комментарий {{ reservation.comment }}</p>
+                    <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
                     {{include('reservation/_delete_form.html.twig')}}
-
                 {% endfor %}
 
             {% for reservation in reservationsFuture %}
-
-                <p class="text-info">{{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>{{ reservation.startTime|date('H:i') }}</p>
+                <p class="text-info">Дата процедуры: {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                <p>Дата начала процедуры: {{ reservation.startTime|date('H:i') }}</p>
+                <p>Примерная дата окончания процедуры: {{ reservation.endTime|date('H:i') }}</p>
+                <p>Ваш комментарий: {{ reservation.comment }}</p>
+                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}.</p>
                 {{include('reservation/_delete_form.html.twig')}}
-
             {% endfor %}
-
         {% endif %}
-
-
     </div>
 {% endblock %}

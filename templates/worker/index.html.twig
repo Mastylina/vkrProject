@@ -10,7 +10,7 @@
 
                 <div class="col-sm-6 my-md-2">
                     <div class="card">
-                        <img class="card-img-top text-center" src="{{worker.photo}}"  style="width:200px;" alt="Card image cap">
+                        <img class="card-img-top text-center" src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"  style="width:200px;" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{ worker.userWorker.name }}</h5>
                             <p class="card-text">{{ worker.post.name }}</p>
@@ -20,7 +20,7 @@
                 </div>
 
             {% else %}
-                Услуг не найдено
+                Работников не найдено
             {% endfor %}
         </div>
     </div>

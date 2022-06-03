@@ -1,46 +1,39 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <body>
+<div class="container-fluid">
 <section>
     <blockquote>
-        <p>
-            “QUISQUE IN ENIM VELIT, AT DIGNISSIM EST. NULLA UL CORPER, DOLOR AC PELLENTESQUE PLACERAT, JUSTO TELLUS
-            GRAVIDA ERAT, VEL PORTTITOR LIBERO ERAT.”
+        <p class="text-center">
+            “ВСЁ В НАШИХ РУКАХ, ПОЭТОМУ ОНИ ДОЛЖНЫ БЫТЬ В ПОЛНОМ ПОРЯДКЕ.”
         </p>
-        <cite>John Doe, Lorem Ipsum</cite>
+        <cite>Коко Шанель</cite>
     </blockquote>
-    <p>Lorem ipsum dolor sit amet…</p>
-    <p>Donec vel nisl nibh…</p>
-    <p>Donec vel nisl nibh…</p>
-    <figure>
-        <img src="" width="320" height="175" alt="">
-    </figure>
-    <figure>
-        <img src="" width="320" height="175" alt="">
-    </figure>
-    <h2>Наша команда</h2>
+    <p>Мы предоставляем большой спектр качественных услуг. Наше пространство это больше, чем просто салон красоты! Уже с порога у нас вы получаете эстетическое наслаждение от приятного времяпрепровождения.</p>
+    <p>Мы за долгосрочные отношения с гостем салона, за безопасность и профессионализм оказания качества услуг. Поэтому в нашем салоне работают только мастера с многолетним опытом работы, которые постоянно проходят повышения квалификации и совершенствуются.</p>
+    <p>Наш салон создан для тех, кто хочет получать не только качество, но высокий сервис, комфорт, окружать себя красотой и превращать поход в салон в приятное событие. Приходя к нам на процедуры вы не просто приводите себя в порядок, а отдыхаете душой и телом!</p>
+    {% for service in services %}
+        <figure>
+            <img src="{{ asset('assets/main/img/services/' ~ service.photo) }}" width="320" height="175" alt="">
+            <figcaption class="text-center">{{ service.name }}</figcaption>
+        </figure>
+    {% else %}
+        Работников не найдено
+    {% endfor %}
+    <h2 class="text-center">Наша команда</h2>
     <div class="team-row">
+        {% for worker in workers %}
         <figure>
-            <img src="images/sample.png" width="96" height="96" alt="">
-            <figcaption>John Doe<span>ceo</span></figcaption>
+            <img src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" width="96" height="96" alt="">
+            <figcaption>{{ worker.userWorker.surname }} {{ worker.userWorker.name }}<span>{{ worker.post.name }}</span></figcaption>
         </figure>
-        <figure>
-            <img src="images/sample.png" width="96" height="96" alt="">
-            <figcaption>Saundra Pittsley<span>team leader</span></figcaption>
-        </figure>
-        …
-    </div>
-    <div class="team-row">
-        <figure>
-            <img src="images/sample.png" width="96" height="96" alt="">
-            <figcaption>Ericka Nobriga<span>art director</span></figcaption>
-        </figure>
-        <figure>
-            <img src="images/sample.png" width="96" height="96" alt="">
-            <figcaption>Cody Rousselle<span>senior ui designer</span></figcaption>
-        </figure>
+        {% else %}
+            Работников не найдено
+        {% endfor %}
     </div>
 </section>
+</div>
 </body>
-
+    {{include('basefooter.htm.twig')}}
 {% endblock %}
+

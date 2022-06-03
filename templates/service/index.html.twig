@@ -10,7 +10,7 @@
 
                 <div class="col-sm-6 my-md-2">
                     <div class="card">
-                        <img class="card-img-top text-center" src="{{service.photo}}"  style="width:200px;" alt="Card image cap">
+                        <img class="card-img-top text-center" src="{{ asset('assets/main/img/services/' ~ service.photo) }}"  style="width:200px;" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{ service.name }}</h5>
                             <p class="card-text">{{ service.description }} Стоимость услуги {{ service.price }} рублей</p>

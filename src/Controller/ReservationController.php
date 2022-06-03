@@ -144,7 +144,10 @@ class ReservationController extends AbstractController
                 ->from('annyasotovii12345@gmail.com')
                 ->to($this->getUser()->getEmail())
                 ->subject('Time for Symfony Mailer!')
-                ->text('Sending emails is fun again!');
+                ->text($this->renderView(
+                    'reservation/info1.html.twig', [
+                    'reservation' => $reservation,
+                ]));
 
             $mailer->send($email);
 
