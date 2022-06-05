@@ -27,6 +27,7 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedbackWorker::class)]
     private $feedbackWorkers;
 
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -154,4 +155,5 @@ class Client
 
         return $this;
     }
+
 }

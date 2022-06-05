@@ -101,6 +101,9 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.12"
     },
+    "kriswallsmith/assetic": {
+        "version": "v1.0.5"
+    },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
@@ -124,6 +127,9 @@
     },
     "psr/log": {
         "version": "2.0.0"
+    },
+    "robloach/component-installer": {
+        "version": "0.0.12"
     },
     "sabberworm/php-css-parser": {
         "version": "8.4.0"

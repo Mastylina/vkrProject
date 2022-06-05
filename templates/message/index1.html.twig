@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MessageController!{% endblock %}
+
+{% block body %}
+    <h3>Выберите клиента для просмотра диалога:</h3>
+    <ul>
+        {% for client in clients %}
+            <li><a type="button" class="btn btn-primary" href="{{ path('app_message1', {'id' : client[0].id}) }}">
+                    {{ client[0].userClient.name }}
+                    {% if client[1] > 0 %}
+                        <span class="badge badge-light">{{ client[1] }}</span>
+                    {% endif %}
+                </a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

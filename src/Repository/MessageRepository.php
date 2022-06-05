@@ -38,6 +38,43 @@ class MessageRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findByNotRead($client, $worker)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.recipient = :client')
+            ->andWhere('m.sender = :worker')
+            ->andWhere('m.checkReading = false')
+            ->setParameter('worker', $worker)
+            ->setParameter('client', $client)
+            ->orderBy('m.dateAndTime', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findByNotReadforWorker($worker, $client)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.recipient = :worker')
+            ->andWhere('m.sender = :client')
+            ->andWhere('m.checkReading = false')
+            ->setParameter('worker', $worker)
+            ->setParameter('client', $client)
+            ->orderBy('m.dateAndTime', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByClientByWorker($client, $worker)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.client = :client')
+            ->andWhere('m.worker = :worker')
+            ->setParameter('worker', $worker)
+            ->setParameter('client', $client)
+            ->orderBy('m.dateAndTime', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Message[] Returns an array of Message objects

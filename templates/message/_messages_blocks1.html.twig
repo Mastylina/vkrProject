@@ -1,0 +1,27 @@
+{% for comment in comments %}
+    {% if comment.sender.roles == ['ROLE_WORKER'] %}
+        <section class="chat">
+            <div class="message message--user-1">
+                <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
+                <figure class="message__author-pic">
+                    <img src="">
+                </figure>
+                <div class="message__text">
+                    <p>{{ comment.textMessage }}</p>
+                </div>
+            </div>
+        </section>
+    {% else %}
+        <section class="chat">
+            <div class="message message--user-2">
+                <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
+                <figure class="message__author-pic">
+                    <img src="">
+                </figure>
+                <div class="message__text">
+                    <p>{{ comment.textMessage }}</p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endfor %}

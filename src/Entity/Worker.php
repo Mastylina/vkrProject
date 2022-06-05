@@ -35,6 +35,8 @@ class Worker
     private $feedbackWorkers;
 
 
+
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -181,4 +183,5 @@ class Worker
 
         return $this;
     }
+
 }

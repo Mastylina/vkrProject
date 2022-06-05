@@ -38,7 +38,14 @@ class WorkerRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function findById($id)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Worker[] Returns an array of Worker objects
 //     */
