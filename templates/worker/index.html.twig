@@ -25,5 +25,8 @@
         </div>
     </div>
 
-    <a href="{{ path('app_worker_new') }}">Create new</a>
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_worker_new') }}">Создать</a>
+    {%endif%}
+    <a class="btn btn-outline-secondary mt-3" href="{{ path('app_home') }}">Вернуться на главную</a>
 {% endblock %}

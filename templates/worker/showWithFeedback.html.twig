@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Worker{% endblock %}
+
+{% block body %}
+    <h1>Worker</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ worker.id }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ asset('assets/main/img/workers/' ~ worker.photo) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h5>Отзывы</h5>
+    <o>
+        {% for feedback in feedbacks %}
+            <li>
+                <p>{{feedback.client.userClient.name}}
+                    {{feedback.text}}
+                    {{feedback.estimation}}
+                    {{feedback.dateAndTime|date('Y-m-d H:i')}}
+                </p></li>
+        {% else %}
+            <h4>Нет отзывов</h4>
+        {% endfor %}
+    </o>
+    {% if app.user %}
+    <h1>Добавить отзыв</h1>
+    {{ include('feedback/_form.html.twig') }}
+    {%endif%}
+
+    <a href="{{ path('app_worker_index') }}">Вернуться на страницу с работниками</a>
+
+{% endblock %}

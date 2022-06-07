@@ -10,6 +10,7 @@
         <a>{{reservation.dateReservation|date('Y-m-d')}}</a>
         <a>{{reservation.service.name}}</a>
         <a>{{reservation.worker.userWorker.name}}</a>
+        <a>{{reservation.price}}</a>
         <a href="{{ path('app_reservation') }}">Назад</a>
     </div>
 {% endblock %}

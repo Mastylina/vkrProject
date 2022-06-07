@@ -38,7 +38,16 @@ class FeedbackWorkerRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function findByMonth()
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.dateAndTime <= :now')
+            ->andWhere('l.dateAndTime >= :noNow')
+            ->setParameter('now', date('Y-m-d', strtotime('today')))
+            ->setParameter('noNow', date('Y-m-d', strtotime('-1 month', strtotime('today'))))
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return FeedbackWorker[] Returns an array of FeedbackWorker objects
 //     */

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kpi index{% endblock %}
+
+{% block body %}
+    <h1>Kpi index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>WeightVolumeSales</th>
+                <th>MinVolumeSales</th>
+                <th>FactVolumeSales</th>
+                <th>PlannedVolumeSales</th>
+                <th>WeightQualityService</th>
+                <th>MinQualityService</th>
+                <th>FactQualityService</th>
+                <th>PlannedQualityService</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for kpi in kpis %}
+            <tr>
+                <td>{{ kpi.id }}</td>
+                <td>{{ kpi.weightVolumeSales }}</td>
+                <td>{{ kpi.minVolumeSales }}</td>
+                <td>{{ kpi.factVolumeSales }}</td>
+                <td>{{ kpi.plannedVolumeSales }}</td>
+                <td>{{ kpi.weightQualityService }}</td>
+                <td>{{ kpi.minQualityService }}</td>
+                <td>{{ kpi.factQualityService }}</td>
+                <td>{{ kpi.plannedQualityService }}</td>
+                <td>
+                    <a href="{{ path('app_kpi_show', {'id': kpi.id}) }}">show</a>
+                    <a href="{{ path('app_kpi_edit', {'id': kpi.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_kpi_new') }}">Create new</a>
+{% endblock %}

@@ -126,7 +126,36 @@ class ReservationController extends AbstractController
         //находим время окончания процедуры
         $timeEnd = new \DateTime($arrayTime[$key+$countStep]);
         $timeStart = new \DateTime($time);
+//начало
+       $AllSums = $repository->findByClientMoneySummaAll($this->getUser()->getClient());//назодим сколько потратил человек за всё время
+        //сложить все суммы которые я нашла в бд
+        $summa = 0;
+        foreach ($AllSums as $AllSum) {
+            $summa+=$AllSum->getPrice();
+        }
 
+        //Добавить в БД поле сумма за бронь summa
+        if ($summa > 10000 && $summa < 15999)
+        {
+
+            $discont = 2;
+        }
+        elseif ($summa > 16000 && $summa < 25999)
+        {
+            $discont = 5;
+        }
+        elseif ($summa > 26000 && $summa < 35999)
+        {
+            $discont = 10;
+        }
+        else
+        {
+            $discont = 0;
+        }
+        // Расчёт итоговой суммы за бронь
+        $itog1 = $service->getPrice() * $discont/100;
+        $itog2 = $service->getPrice() - $itog1;
+       //конец
         $reservation = new Reservation();
         $reservation->setEndTime($timeEnd);
         $reservation->setClient($this->getUser()->getClient());
@@ -134,6 +163,7 @@ class ReservationController extends AbstractController
         $reservation->setWorker($worker);
         $reservation->setChecked(false);
         $reservation->setStartTime($timeStart);
+        $reservation->setPrice($itog2);
         $reservation->setDateReservation(new \DateTime($date));
         $form = $this->createForm(InfoReservationType::class, $reservation);
         $form->handleRequest($request);
@@ -143,7 +173,7 @@ class ReservationController extends AbstractController
             $email = (new Email())
                 ->from('annyasotovii12345@gmail.com')
                 ->to($this->getUser()->getEmail())
-                ->subject('Time for Symfony Mailer!')
+                ->subject('Вы записаны на услугу!')
                 ->text($this->renderView(
                     'reservation/info1.html.twig', [
                     'reservation' => $reservation,

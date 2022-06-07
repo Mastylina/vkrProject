@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kpi{% endblock %}
+
+{% block body %}
+    <h1>Kpi</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ kpi.id }}</td>
+            </tr>
+            <tr>
+                <th>WeightVolumeSales</th>
+                <td>{{ kpi.weightVolumeSales }}</td>
+            </tr>
+            <tr>
+                <th>MinVolumeSales</th>
+                <td>{{ kpi.minVolumeSales }}</td>
+            </tr>
+            <tr>
+                <th>FactVolumeSales</th>
+                <td>{{ kpi.factVolumeSales }}</td>
+            </tr>
+            <tr>
+                <th>PlannedVolumeSales</th>
+                <td>{{ kpi.plannedVolumeSales }}</td>
+            </tr>
+            <tr>
+                <th>WeightQualityService</th>
+                <td>{{ kpi.weightQualityService }}</td>
+            </tr>
+            <tr>
+                <th>MinQualityService</th>
+                <td>{{ kpi.minQualityService }}</td>
+            </tr>
+            <tr>
+                <th>FactQualityService</th>
+                <td>{{ kpi.factQualityService }}</td>
+            </tr>
+            <tr>
+                <th>PlannedQualityService</th>
+                <td>{{ kpi.plannedQualityService }}</td>
+            </tr>
+        </tbody>
+    </table>
+<h1>{{salary}}</h1>
+    <a href="{{ path('app_kpi_index') }}">back to list</a>
+
+    <a href="{{ path('app_kpi_edit', {'id': kpi.id}) }}">edit</a>
+
+    {{ include('kpi/_delete_form.html.twig') }}
+{% endblock %}

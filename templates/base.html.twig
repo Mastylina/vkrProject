@@ -24,7 +24,9 @@
                 <li><a href="/worker">Наши работники</a></li>
                 <li><a href="/about">О нас</a></li>
                 <li><a href="">Акции</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
 
+                {%endif%}
                 {% if is_granted('ROLE_WORKER') %}
                     <li><a href="{{ path('app_schedule_report') }}">График работы</a></li>
                     <li><a href="{{path('app_message_index1')}}">Сообщения</a></li>

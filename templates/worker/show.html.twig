@@ -7,35 +7,41 @@
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ worker.id }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ asset('assets/main/img/workers/' ~ worker.photo) }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ worker.id }}</td>
+        </tr>
+        <tr>
+            <th>Photo</th>
+            <td>{{ asset('assets/main/img/workers/' ~ worker.photo) }}</td>
+        </tr>
         </tbody>
     </table>
+    {% if is_granted('ROLE_WORKER') %}
 
+        {% if kpi %}
+            <a href="{{ path('app_kpi_show', {'id' : kpi[0].id, 'worker' : worker.id}) }}"> Рассчет KPI</a>
+        {% else %}
+            <a href="{{ path('app_kpi_new') }}"> Создать KPI</a>
+        {% endif %}
+    {% endif %}
     <h5>Отзывы</h5>
     <o>
         {% for feedback in feedbacks %}
             <li>
-                <p>{{feedback.client.userClient.name}}
-                    {{feedback.text}}
-                    {{feedback.estimation}}
-                    {{feedback.dateAndTime|date('Y-m-d H:i')}}
+                <p>{{ feedback.client.userClient.name }}
+                    {{ feedback.text }}
+                    {{ feedback.estimation }}
+                    {{ feedback.dateAndTime|date('Y-m-d H:i') }}
                 </p></li>
         {% else %}
             <h4>Нет отзывов</h4>
         {% endfor %}
     </o>
-    <h1>Добавить отзыв</h1>
-    {{ include('feedback/_form.html.twig') }}
-    <a href="{{ path('app_worker_index') }}">back to list</a>
+    <a href="{{ path('app_worker_index') }}">Вернуться на страницу с работниками</a>
+    {% if is_granted('ROLE_ADMIN') %}
 
-    <a href="{{ path('app_worker_edit', {'id': worker.id}) }}">edit</a>
-
-    {{ include('worker/_delete_form.html.twig') }}
+        <a href="{{ path('app_worker_edit', {'id': worker.id}) }}">Изменить</a>
+        {{ include('worker/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}

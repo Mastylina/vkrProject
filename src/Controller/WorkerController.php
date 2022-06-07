@@ -7,6 +7,8 @@ use App\Entity\Worker;
 use App\Form\WorkerType;
 use App\Form\FeedbackWorkerType;
 use App\Repository\FeedbackWorkerRepository;
+use App\Repository\KpiRepository;
+use App\Repository\ReservationRepository;
 use App\Repository\WorkerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,24 +45,44 @@ class WorkerController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
-    public function show(Worker $worker,  Request $request, FeedbackWorkerRepository $feedbackWorkerRepository): Response
+    public function show(KpiRepository $kpiRepository, Worker $worker, Request $request, FeedbackWorkerRepository $feedbackWorkerRepository, ReservationRepository $reservationRepository): Response
     {
-        $feedback = new FeedbackWorker();
-        $form = $this->createForm(FeedbackWorkerType::class, $feedback);
-        $form->handleRequest($request);
-        $feedbacks=$worker->getFeedbackWorkers();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $feedback->setClient($this->getUser()->getClient());
-            $feedback->setDateAndTime(new \DateTime());
-            $feedback->setWorker($worker);
-            $feedbackWorkerRepository->add($feedback, true);
-            return $this->redirectToRoute('app_worker_show', ['id' => $worker->getId()], Response::HTTP_SEE_OTHER);
+        if ($this->getUser()) {
+            if ($reservationRepository->findByWorker($worker, $this->getUser()->getClient())) {
+                $feedback = new FeedbackWorker();
+                $form = $this->createForm(FeedbackWorkerType::class, $feedback);
+                $form->handleRequest($request);
+                $feedbacks = $worker->getFeedbackWorkers();
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $feedback->setClient($this->getUser()->getClient());
+                    $feedback->setDateAndTime(new \DateTime());
+                    $feedback->setWorker($worker);
+                    $feedbackWorkerRepository->add($feedback, true);
+                    return $this->redirectToRoute('app_worker_show', ['id' => $worker->getId()], Response::HTTP_SEE_OTHER);
+                }
+
+                return $this->renderForm('worker/showWithFeedback.html.twig', [
+                    'worker' => $worker,
+                    'feedbacks' => $feedbacks,
+                    'form' => $form,
+                ]);
+            }
+            else {
+                $feedbacks = $worker->getFeedbackWorkers();
+                $kpi = $kpiRepository->findByWorker($worker);
+                return $this->render('worker/show.html.twig', [
+                    'worker' => $worker,
+                    'feedbacks' => $feedbacks,
+                    'kpi'=>$kpi,
+                ]);
+            }
+        } else {
+            $feedbacks = $worker->getFeedbackWorkers();
+            return $this->render('worker/show.html.twig', [
+                'worker' => $worker,
+                'feedbacks' => $feedbacks,
+            ]);
         }
-        return $this->renderForm('worker/show.html.twig', [
-            'worker' => $worker,
-            'feedbacks' => $feedbacks,
-            'form' => $form,
-        ]);
     }
 
     #[Route('/{id}/edit', name: 'app_worker_edit', methods: ['GET', 'POST'])]
@@ -84,7 +106,7 @@ class WorkerController extends AbstractController
     #[Route('/{id}', name: 'app_worker_delete', methods: ['POST'])]
     public function delete(Request $request, Worker $worker, WorkerRepository $workerRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$worker->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $worker->getId(), $request->request->get('_token'))) {
             $workerRepository->remove($worker, true);
         }
 

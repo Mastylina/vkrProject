@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Kpi{% endblock %}
+
+{% block body %}
+    <h1>Create new Kpi</h1>
+
+    {{ include('kpi/_form.html.twig') }}
+
+    <a href="{{ path('app_kpi_index') }}">back to list</a>
+{% endblock %}

@@ -34,6 +34,9 @@ class Worker
     #[ORM\OneToMany(mappedBy: 'worker', targetEntity: FeedbackWorker::class)]
     private $feedbackWorkers;
 
+    #[ORM\OneToOne(mappedBy: 'worker', targetEntity: Kpi::class, cascade: ['persist', 'remove'])]
+    private $kpi;
+
 
 
 
@@ -180,6 +183,23 @@ class Worker
                 $feedbackWorker->setWorker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getKpi(): ?Kpi
+    {
+        return $this->kpi;
+    }
+
+    public function setKpi(Kpi $kpi): self
+    {
+        // set the owning side of the relation if necessary
+        if ($kpi->getWorker() !== $this) {
+            $kpi->setWorker($this);
+        }
+
+        $this->kpi = $kpi;
 
         return $this;
     }

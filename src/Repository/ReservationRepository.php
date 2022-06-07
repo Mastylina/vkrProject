@@ -30,6 +30,40 @@ class ReservationRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByMonth()
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.dateReservation <= :now')
+            ->andWhere('l.dateReservation >= :noNow')
+            ->andWhere('l.checked = true')
+            ->setParameter('now', date('Y-m-d', strtotime('today')))
+            ->setParameter('noNow', date('Y-m-d', strtotime('-1 month', strtotime('today'))))
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByWorker($worker, $client)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.worker = :worker')
+            ->andWhere('l.client = :client')
+            ->setParameter('worker', $worker)
+            ->setParameter('client', $client)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByService($service, $client)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.service = :service')
+            ->andWhere('l.client = :client')
+            ->setParameter('service', $service)
+            ->setParameter('client', $client)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function remove(Reservation $entity, bool $flush = true): void
     {
         $this->getEntityManager()->remove($entity);
@@ -47,24 +81,30 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('date', $dateDay)
             ->setParameter('worker', $master)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
     public function findByWorkerSchedule($dateDay, $master)//График мастера от сегодняшнего дня
     {
         return $this->createQueryBuilder('l')
-            ->orWhere('l.dateReservation >= :dateToday')
+            ->andWhere('l.dateReservation >= :dateToday')
             ->andWhere('l.worker = :worker')
-
             ->setParameter('dateToday', $dateDay)
             ->setParameter('worker', $master)
             ->orderBy('l.startTime', 'ASC')
             ->orderBy('l.dateReservation', 'ASC')
-
-
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
+    }
+
+    public function findByClientMoneySummaAll($client)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.client = :client')
+            ->andWhere('l.checked = true')
+            ->setParameter('client', $client)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findByClientFuture($client)//возвращает будщие бронирования
@@ -76,9 +116,9 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('date', new \DateTime())
             ->orderBy('l.dateReservation', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
     public function findByClientCurrent1($client)//возвращает сегоднешние прошедшие бронирования
     {
         $time = new \DateTime();
@@ -91,9 +131,9 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('date', new \DateTime())
             ->setParameter('timeEnd', $time)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
     public function findByClientCurrent2($client)//возвращает сегоднешние текущие бронирования
     {
         $time = new \DateTime();
@@ -107,8 +147,7 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('date', new \DateTime())
             ->setParameter('time', $time)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     public function findByClientCurrent3($client)//возвращает сегоднешние предстоящие бронирования
@@ -123,9 +162,9 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('date', new \DateTime())
             ->setParameter('time', $time)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
     public function findByClientPast($client)//возвращает прошедшие бронирования
     {
         return $this->createQueryBuilder('l')
@@ -134,8 +173,7 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('client', $client)
             ->setParameter('date', new \DateTime())
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 //    /**
 //     * @return Reservation[] Returns an array of Reservation objects

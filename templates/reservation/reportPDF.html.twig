@@ -1,9 +1,9 @@
 
 
 {% block body %}
-    <h1 align="center">График работы</h1>
+    <h1 align="center">График работы</h1><hr>
 
-    <table align="center" class="table">
+    <table align="center" class="table table-bordered border-dark bg-light">
         <thead>
         <tr>
             <th>Дата</th>
@@ -12,8 +12,11 @@
             <th>Услуга</th>
             <th>Мастер</th>
         </tr>
+
         </thead>
+
         <tbody>
+
         {% for schedule in schedules %}
             <tr>
                 <td>{{ schedule.dateReservation|date('Y-m-d') }}</td>

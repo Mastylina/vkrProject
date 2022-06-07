@@ -6,4 +6,5 @@
     Вы записаны на услугу {{reservation.service.name}}. Дата и время начала процедуры {{reservation.dateReservation|date('Y-m-d')}}, {{reservation.startTime|date('H:i')}}.
     Примерное время окончания процедуры {{ reservation.endTime|date('H:i')}}.
     Услугу выполнит мастер {{reservation.worker.userWorker.name}}.
+    Стоимость услуги {{reservation.price}}.
 {% endblock %}
