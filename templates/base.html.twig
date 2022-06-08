@@ -25,7 +25,8 @@
                 <li><a href="/about">О нас</a></li>
                 <li><a href="">Акции</a></li>
                 {% if is_granted('ROLE_ADMIN') %}
-
+                    <li><a href="{{path('app_reservation_index')}}">Бронирования</a></li>
+                    <li><a href="{{path('app_post_index')}}">Должность</a></li>
                 {%endif%}
                 {% if is_granted('ROLE_WORKER') %}
                     <li><a href="{{ path('app_schedule_report') }}">График работы</a></li>

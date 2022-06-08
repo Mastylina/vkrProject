@@ -3,18 +3,22 @@
 {% block title %}Service index{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
+    <div class="container">
         <h1>Предоставляемые услуги</h1>
         <div class="row">
             {% for service in services %}
 
                 <div class="col-sm-6 my-md-2">
                     <div class="card">
+                        <center>
                         <img class="card-img-top text-center" src="{{ asset('assets/main/img/services/' ~ service.photo) }}"  style="width:200px;" alt="Card image cap">
+                        </center>
                         <div class="card-body">
-                            <h5 class="card-title">{{ service.name }}</h5>
-                            <p class="card-text">{{ service.description }} Стоимость услуги {{ service.price }} рублей</p>
+                            <h5 class="card-title text-center">{{ service.name }}</h5>
+                            <p class="card-text text-center">{{ service.description }} Стоимость услуги {{ service.price }} рублей</p>
+                            <center>
                             <a href="{{ path('app_service_show', {'id': service.id}) }}" class="card-link">Пройти</a>
+                            </center>
                         </div>
                     </div>
                 </div>
@@ -23,10 +27,11 @@
                 Услуг не найдено
             {% endfor %}
         </div>
-    </div>
+
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('app_service_new') }}">Создать</a>
     <a href="{{ path('app_service_report') }}">Отчёт</a>
     {%endif%}
     <a class="btn btn-outline-secondary mt-3" href="{{ path('app_home') }}">Вернуться на главную</a>
+    </div>
 {% endblock %}

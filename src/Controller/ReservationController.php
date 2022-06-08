@@ -56,7 +56,7 @@ class ReservationController extends AbstractController
             '11:00', '11:30', '12:00', '12:30', '13:00',
             '13:30', '14:00', '14:30', '15:00', '15:30',
             '16:00', '16:30', '17:00', '17:30', '18:00',
-            '18:30', '19:00', '19:30', '20:00', '20:30',
+            '18:30', '19:00', '19:30', '20:00', '20:30'
         );
         $test[]=0;
         foreach ($reservations as $reservation) {
@@ -114,7 +114,7 @@ class ReservationController extends AbstractController
             '11:00', '11:30', '12:00', '12:30', '13:00',
             '13:30', '14:00', '14:30', '15:00', '15:30',
             '16:00', '16:30', '17:00', '17:30', '18:00',
-            '18:30', '19:00', '19:30', '20:00', '20:30', );
+            '18:30', '19:00', '19:30', '20:00', '20:30', '21:00');
         //находим время записи
         $key = array_search($time, $arrayTime);
 
@@ -170,7 +170,8 @@ class ReservationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->add($reservation);
-            $email = (new Email())
+
+          /*  $email = (new Email())
                 ->from('annyasotovii12345@gmail.com')
                 ->to($this->getUser()->getEmail())
                 ->subject('Вы записаны на услугу!')
@@ -180,7 +181,7 @@ class ReservationController extends AbstractController
                 ]));
 
             $mailer->send($email);
-
+*/
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -249,5 +250,20 @@ class ReservationController extends AbstractController
             'reservationsCurrent2' => $reservationsCurrent2,
             'reservationsCurrent3' => $reservationsCurrent3,
         ]);
+    }
+    #[Route('reservation/pageAdmin', name: 'app_reservation_index', methods: ['GET'])]
+    public function pageAdmin( ReservationRepository $reservationRepository): Response
+    {
+        $reservations = $reservationRepository->findByChecked();
+        return $this->render('reservation/page_admin.html.twig', [
+            'reservations' => $reservations,
+            ]);
+    }
+    #[Route('reservation/setCheck/{reservation}', name: 'app_reservation_set_check', methods: ['GET', 'POST'])]
+    public function setCheck( ReservationRepository $reservationRepository, Reservation $reservation): Response
+    {
+        $reservation->setChecked('true');
+        $reservationRepository->add($reservation, true);
+        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 }

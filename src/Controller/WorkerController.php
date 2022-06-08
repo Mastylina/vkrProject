@@ -3,16 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\FeedbackWorker;
+use App\Entity\User;
 use App\Entity\Worker;
+use App\Form\RegistrationFormType;
 use App\Form\WorkerType;
 use App\Form\FeedbackWorkerType;
 use App\Repository\FeedbackWorkerRepository;
 use App\Repository\KpiRepository;
 use App\Repository\ReservationRepository;
+use App\Repository\UserRepository;
 use App\Repository\WorkerRepository;
+use Cassandra\Type\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/worker')]
@@ -26,25 +31,54 @@ class WorkerController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_worker_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, WorkerRepository $workerRepository): Response
+    #[Route('/newUser', name: 'app_user_worker_new', methods: ['GET', 'POST'])]
+    public function newUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $user->setRoles(['ROLE_WORKER']);
+            $userRepository->add($user, true);
+            return $this->redirectToRoute('app_worker_new', ['user' => $user->getId()]);
+        }
+
+
+        return $this->renderForm('worker/newUser.html.twig', ['registrationForm' => $form,]);
+    }
+
+    #[Route('/newWorker/{user}', name: 'app_worker_new', methods: ['GET', 'POST'])]
+    public function newWorker(Request $request, WorkerRepository $workerRepository, User $user): Response
     {
         $worker = new Worker();
         $form = $this->createForm(WorkerType::class, $worker);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $brochureFile = $form->get('photo')->getData();
+            if ($brochureFile) {
+                $originalFilename = $brochureFile->getClientOriginalName();
+                // this is needed to safely include the file name as part of the URL
+                $brochureFile->move(
+                    $this->getParameter('brochur_directory'),
+                    $originalFilename
+                );
+            }
+            $worker->setUserWorker($user);
+            $worker->setPhoto($originalFilename);
             $workerRepository->add($worker, true);
             return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('worker/new.html.twig', [
-            'worker' => $worker,
-            'form' => $form,
-        ]);
+        return $this->renderForm('worker/newWorker.html.twig', ['form' => $form,]);
     }
 
-    #[Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
+    #[ Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
     public function show(KpiRepository $kpiRepository, Worker $worker, Request $request, FeedbackWorkerRepository $feedbackWorkerRepository, ReservationRepository $reservationRepository): Response
     {
         if ($this->getUser()) {
@@ -66,14 +100,13 @@ class WorkerController extends AbstractController
                     'feedbacks' => $feedbacks,
                     'form' => $form,
                 ]);
-            }
-            else {
+            } else {
                 $feedbacks = $worker->getFeedbackWorkers();
                 $kpi = $kpiRepository->findByWorker($worker);
                 return $this->render('worker/show.html.twig', [
                     'worker' => $worker,
                     'feedbacks' => $feedbacks,
-                    'kpi'=>$kpi,
+                    'kpi' => $kpi,
                 ]);
             }
         } else {
@@ -92,6 +125,17 @@ class WorkerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $brochureFile = $form->get('photo')->getData();
+            if ($brochureFile) {
+                $originalFilename = $brochureFile->getClientOriginalName();
+                // this is needed to safely include the file name as part of the URL
+                $brochureFile->move(
+                    $this->getParameter('brochur_directory'),
+                    $originalFilename
+                );
+            }
+
+            $worker->setPhoto($originalFilename);
             $workerRepository->add($worker, true);
 
             return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
@@ -103,7 +147,7 @@ class WorkerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_worker_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_worker_delete', methods: ['GET','POST'])]
     public function delete(Request $request, Worker $worker, WorkerRepository $workerRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $worker->getId(), $request->request->get('_token'))) {

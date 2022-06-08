@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1> Не подтвержденные бронирования:</h1>
+    {% for reservation in reservations %}
+        <div>
+            {{ reservation.dateReservation|date('Y-m-d') }}
+            {{ reservation.startTime|date('H:i') }}
+            {{ reservation.endTime|date('H:i') }}
+            {{ reservation.worker }}
+            {{ reservation.client.userClient.name }}
+            <a href="{{ path('app_reservation_set_check', {'reservation' : reservation.id}) }}">Подвердить что процедура завершена</a>
+        </div>
+    {% endfor %}
+{% endblock %}

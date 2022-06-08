@@ -47,13 +47,7 @@
             margin: 0 10px 0 0;
         }
 
-        .message__text {
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #69b4f3;
-            background-color: #bfe2ff;
-            max-width: 70%;
-        }
+
 
         .message--user-2 {
             justify-content: flex-end;
@@ -73,7 +67,7 @@
             background-color: #69b4f3;
         }
     </style>
-    <div class="js-last-comments">
+    <div class="js-last-comments container " style="overflow: scroll; height: 500px;">
         {% include 'message/_messages_blocks.html.twig' %}
     </div>
     {{ include('message/_form.html.twig') }}

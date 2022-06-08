@@ -27,12 +27,16 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedbackWorker::class)]
     private $feedbackWorkers;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Diary::class, orphanRemoval: true)]
+    private $diaries;
+
 
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->feedbackWorkers = new ArrayCollection();
+        $this->diaries = new ArrayCollection();
     }
 
     public function __toString()
@@ -150,6 +154,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($feedbackWorker->getClient() === $this) {
                 $feedbackWorker->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Diary>
+     */
+    public function getDiaries(): Collection
+    {
+        return $this->diaries;
+    }
+
+    public function addDiary(Diary $diary): self
+    {
+        if (!$this->diaries->contains($diary)) {
+            $this->diaries[] = $diary;
+            $diary->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiary(Diary $diary): self
+    {
+        if ($this->diaries->removeElement($diary)) {
+            // set the owning side to null (unless already changed)
+            if ($diary->getClient() === $this) {
+                $diary->setClient(null);
             }
         }
 

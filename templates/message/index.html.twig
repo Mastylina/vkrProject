@@ -3,6 +3,7 @@
 {% block title %}Hello MessageController!{% endblock %}
 
 {% block body %}
+    <div class="container">
     <h3>Выберите сотрудника для просмотра диалога:</h3>
     <ul>
         {% for worker in workers %}
@@ -14,4 +15,5 @@
                 </a></li>
         {% endfor %}
     </ul>
+    </div>
 {% endblock %}

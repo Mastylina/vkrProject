@@ -15,6 +15,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Validator\Constraints\Range;
 
 class RegistrationFormType extends AbstractType
 {
@@ -22,23 +24,69 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('numberPhone', TelType::class, [
-                'label' => 'Номер телефона'
+                'label' => 'Номер телефона',
+                'constraints' => [
+                    new Length([
+                        'max' => 12,
+                        'maxMessage' => 'Превышена максимальная длина символов'
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не может быть пустым',
+                    ]),
+                ],
             ])
             ->add('birthdate', BirthdayType::class, [
-
-            'label'=> 'Дата рождения']
+                    'label' => 'Дата рождения',
+                    'widget' => 'choice',
+                    'format' => 'yyyy-MM-dd',
+                    'data' => new \DateTime()]
             )
             ->add('surname', TextType::class, [
-        'label' => 'Фамилия']
+                    'label' => 'Фамилия',
+                    'constraints' => [
+                        new Length([
+                            'max' => 50,
+                            'maxMessage' => 'Превышена максимальная длина символов'
+                        ]),
+                        new NotBlank([
+                            'message' => 'Поле не может быть пустым',
+                        ]),
+                    ],
+            ]
+
             )
             ->add('name', TextType::class, [
-        'label' => 'Имя']
-    )
-            ->add('patronymic', TextType::class, [
-                'label' => 'Отчество']
+                    'label' => 'Имя','constraints' => [
+                        new Length([
+                            'max' => 50,
+                            'maxMessage' => 'Превышена максимальная длина символов'
+                        ]),
+                        new NotBlank([
+                            'message' => 'Поле не может быть пустым',
+                        ]),
+                    ],]
             )
-            ->add('email',EmailType::class, [
-        'label' => 'Электронная почта'])
+            ->add('patronymic', TextType::class, [
+                    'label' => 'Отчество','constraints' => [
+                        new Length([
+                            'max' => 50,
+                            'maxMessage' => 'Превышена максимальная длина символов'
+                        ]),
+                        new NotBlank([
+                            'message' => 'Поле не может быть пустым',
+                        ]),
+                    ],]
+            )
+            ->add('email', EmailType::class, [
+                'label' => 'Электронная почта','constraints' => [
+                    new Length([
+                        'max' => 180,
+                        'maxMessage' => 'Превышена максимальная длина символов'
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не может быть пустым',
+                    ]),
+                ],])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -47,11 +95,11 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Введите пароль',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Пароль не соответствует требованиям',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
@@ -62,11 +110,10 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Согласие на обработку персональных данных',
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Вы должны согласиться чтобы продолжить',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

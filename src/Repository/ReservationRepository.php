@@ -175,6 +175,15 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByChecked()//возвращает не подтвержденные резервации
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.checked = :check')
+            ->setParameter('check', 'false')
+            ->addOrderBy('l.dateReservation', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Reservation[] Returns an array of Reservation objects
 //     */

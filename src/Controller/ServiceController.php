@@ -20,6 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/service')]
 class ServiceController extends AbstractController
@@ -66,14 +69,24 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/new', name: 'app_service_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ServiceRepository $serviceRepository): Response
+    public function new(Request $request, ServiceRepository $serviceRepository,SluggerInterface $slugger): Response
     {
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $serviceRepository->add($service, true);
+            $brochureFile = $form->get('photo')->getData();
+            if ($brochureFile) {
+                $originalFilename = $brochureFile->getClientOriginalName();
+                // this is needed to safely include the file name as part of the URL
+                $brochureFile->move(
+                    $this->getParameter('brochures_directory'),
+                    $originalFilename
+                );
+            }
+            $service->setPhoto($originalFilename);
+                $serviceRepository->add($service, true);
 
             return $this->redirectToRoute('app_service_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -136,6 +149,16 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $brochureFile = $form->get('photo')->getData();
+            if ($brochureFile) {
+                $originalFilename = $brochureFile->getClientOriginalName();
+                // this is needed to safely include the file name as part of the URL
+                $brochureFile->move(
+                    $this->getParameter('brochures_directory'),
+                    $originalFilename
+                );
+            }
+            $service->setPhoto($originalFilename);
             $serviceRepository->add($service, true);
 
             return $this->redirectToRoute('app_service_index', [], Response::HTTP_SEE_OTHER);
@@ -147,7 +170,7 @@ class ServiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_service_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_service_delete', methods: ['POST'])]
     public function delete(Request $request, Service $service, ServiceRepository $serviceRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$service->getId(), $request->request->get('_token'))) {

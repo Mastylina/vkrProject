@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container-sm">
-    <h1 class="h3 mb-3 font-weight-normal text-center">Регистрация</h1>
+    <h1 class="h3 mb-3 font-weight-normal text-center">Заполните базувую информацию</h1>
     {{ form_start(registrationForm) }}
     {{ form_row(registrationForm.surname) }}
     {{ form_row(registrationForm.name) }}
@@ -19,7 +19,7 @@
     {{ form_row(registrationForm.agreeTerms) }}
 
     <button> <a class="btn btn-primary" type="submit">
-            Регистрация
+            далее
         </a></button>
 
     {{ form_end(registrationForm) }}

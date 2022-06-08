@@ -18,14 +18,17 @@ class Post
     #[ORM\Column(type: 'string', length: 50)]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Worker::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Worker::class, cascade: ['persist', 'remove'])]
     private $workers;
 
     public function __construct()
     {
         $this->workers = new ArrayCollection();
     }
-
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function getId(): ?int
     {
         return $this->id;

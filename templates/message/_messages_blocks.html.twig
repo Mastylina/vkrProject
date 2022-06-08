@@ -1,24 +1,22 @@
 {% for comment in comments %}
     {% if comment.sender.roles == ['ROLE_CLIENT'] %}
-        <section class="chat">
-            <div class="message message--user-1">
+        <section class="chat w-75 container " >
+            <div class="message message--user-1  w-50" >
                 <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
-                <figure class="message__author-pic">
-                    <img src="">
-                </figure>
-                <div class="message__text">
+
+                <div class="text-black text-center w-100 rounded-3" style="background:#69b4f3;">
                     <p>{{ comment.textMessage }}</p>
                 </div>
             </div>
         </section>
     {% else %}
-        <section class="chat">
-            <div class="message message--user-2">
+        <section class="chat w-75">
+            <div class="message message--user-2 w-50">
                 <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
                 <figure class="message__author-pic">
-                    <img src="">
+                    <img src="comment.sender.worker.photo">
                 </figure>
-                <div class="message__text">
+                <div class="text-black text-center w-100 rounded-3" style="background:#B0413E;">
                     <p>{{ comment.textMessage }}</p>
                 </div>
             </div>

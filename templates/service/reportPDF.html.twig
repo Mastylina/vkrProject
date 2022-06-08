@@ -6,15 +6,13 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
+            <th>Название услуги</th>
+            <th>Описание</th>
         </tr>
         </thead>
         <tbody>
         {% for service in services %}
             <tr>
-                <td>{{ service.id }}</td>
                 <td>{{ service.name }}</td>
                 <td>{{ service.description }}</td>
             </tr>

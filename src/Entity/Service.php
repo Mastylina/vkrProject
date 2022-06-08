@@ -30,13 +30,13 @@ class Service
     #[ORM\Column(type: 'string', length: 1000)]
     private $description;
 
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Reservation::class)]
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Reservation::class, cascade: ['persist', 'remove'])]
     private $reservations;
 
     #[ORM\ManyToMany(targetEntity: Worker::class, mappedBy: 'services')]
     private $workers;
 
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Feedback::class)]
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Feedback::class, cascade: ['persist', 'remove'])]
     private $feedbacks;
 
     public function __construct()

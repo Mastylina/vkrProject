@@ -25,17 +25,20 @@ class Worker
     #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'workers')]
     private $services;
 
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Reservation::class)]
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Reservation::class, cascade: ['persist', 'remove'])]
     private $reservations;
 
     #[ORM\OneToOne(mappedBy: 'worker', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $userWorker;
 
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: FeedbackWorker::class)]
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: FeedbackWorker::class, cascade: ['persist', 'remove'])]
     private $feedbackWorkers;
 
     #[ORM\OneToOne(mappedBy: 'worker', targetEntity: Kpi::class, cascade: ['persist', 'remove'])]
     private $kpi;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Diary::class, orphanRemoval: true)]
+    private $diaries;
 
 
 
@@ -46,6 +49,7 @@ class Worker
         $this->reservations = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->feedbackWorkers = new ArrayCollection();
+        $this->diaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +204,36 @@ class Worker
         }
 
         $this->kpi = $kpi;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Diary>
+     */
+    public function getDiaries(): Collection
+    {
+        return $this->diaries;
+    }
+
+    public function addDiary(Diary $diary): self
+    {
+        if (!$this->diaries->contains($diary)) {
+            $this->diaries[] = $diary;
+            $diary->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiary(Diary $diary): self
+    {
+        if ($this->diaries->removeElement($diary)) {
+            // set the owning side to null (unless already changed)
+            if ($diary->getWorker() === $this) {
+                $diary->setWorker(null);
+            }
+        }
 
         return $this;
     }

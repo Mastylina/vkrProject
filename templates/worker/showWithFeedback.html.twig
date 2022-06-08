@@ -3,39 +3,61 @@
 {% block title %}Worker{% endblock %}
 
 {% block body %}
-    <h1>Worker</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ worker.id }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ asset('assets/main/img/workers/' ~ worker.photo) }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <h5>Отзывы</h5>
-    <o>
-        {% for feedback in feedbacks %}
-            <li>
-                <p>{{feedback.client.userClient.name}}
-                    {{feedback.text}}
-                    {{feedback.estimation}}
-                    {{feedback.dateAndTime|date('Y-m-d H:i')}}
-                </p></li>
-        {% else %}
-            <h4>Нет отзывов</h4>
-        {% endfor %}
-    </o>
+<div class="container">
+    <h1 class="text-center">{{worker.userWorker.name}}</h1>
+    <center>
+        <div class="col-sm-6 my-md-2 text-center">
+            <div class="card">
+                <center>
+                    <img class="card-img-top text-center" src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"  style="width:200px;" alt="Card image cap">
+                </center>
+                <div class="card-body">
+                    <p class="card-text">{{ worker.post.name }} </p>
+                </div>
+            </div>
+        </div>
+    </center>
+    <h5 class="text-center">Отзывы</h5>
+
+
+    <div class="row d-flex justify-content-center" >
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-0 border h-75" style="background-color: #f0f2f5;">
+                <div class="card-body p-4 ", style="overflow: auto">
+                    {% for feedback in feedbacks %}
+                        <div class="card mb-4" >
+                            <div class="card-body">
+                                <p>{{feedback.text}}</p>
+
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <p class="small mb-0 ms-2"> {{feedback.client.userClient.surname}} {{feedback.client.userClient.name}} {{feedback.dateAndTime|date('Y-m-d')}}</p>
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center">
+
+                                        <p class="small text-muted mb-0">Оценка</p>
+                                        <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                                        <p class="small text-muted mb-0">{{feedback.estimation}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <h4>Нет отзывов</h4>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% if app.user %}
     <h1>Добавить отзыв</h1>
     {{ include('feedback/_form.html.twig') }}
     {%endif%}
 
     <a href="{{ path('app_worker_index') }}">Вернуться на страницу с работниками</a>
-
+</div>
 {% endblock %}
