@@ -3,9 +3,11 @@
 {% block title %}Новая должность{% endblock %}
 
 {% block body %}
+    <div class="container">
     <h1>Создать должность</h1>
 
     {{ include('post/_form.html.twig') }}
 
     <a href="{{ path('app_post_index') }}">Вернуться</a>
+    </div>
 {% endblock %}

@@ -34,6 +34,19 @@ class WorkerType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
 
             ])
+            ->add('salary', NumberType::class, [
+                'label' => 'Оклад',
+                'constraints' => [
+                    new Range([
+                        'notInRangeMessage' => 'Значение поля должно быть в пределах от {{ min }} до {{ max }}',
+                        'min' => 1,
+                        'max' => 100000,
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не может быть пустым',
+                    ]),
+                ],
+            ])
             ->add('post')
             ->add('services')
         ;

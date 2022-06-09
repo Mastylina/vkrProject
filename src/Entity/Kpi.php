@@ -37,7 +37,7 @@ class Kpi
     #[ORM\Column(type: 'float')]
     private $plannedQualityService;
 
-    #[ORM\OneToOne(inversedBy: 'kpi', targetEntity: Worker::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'kpi', targetEntity: Worker::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $worker;
 

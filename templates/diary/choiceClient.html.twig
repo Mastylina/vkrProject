@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Выбоор клиента{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Выберите клиента</h1>
+        <ul>
+            {% for client in clients %}
+                <li>
+                    <a class="fs-6" href="{{ path('app_diary_index',{'client' : client.id}) }}">{{ client.userClient.name }} {{ client.userClient.surname }} </a>
+                </li>
+            {% else %}
+                <p>У вас нет ни одной записи(((</p>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

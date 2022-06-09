@@ -26,76 +26,120 @@ class KpiController extends AbstractController
 
     #[Route('/new/{worker}', name: 'app_kpi_new', methods: ['GET', 'POST'])]
     public function new(ReservationRepository $reservationRepository, Worker $worker, Request $request,
-                        KpiRepository $kpiRepository, FeedbackWorkerRepository $feedbackWorkerRepository): Response
+                        KpiRepository         $kpiRepository, FeedbackWorkerRepository $feedbackWorkerRepository): Response
     {
+
         $kpi = new Kpi();
+
         $form = $this->createForm(KpiType::class, $kpi);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservations = $reservationRepository->findByMonth();
-            $summa = 0;
-            foreach ($reservations as $reservation) {
-               $summa += $reservation->getPrice();
-            }
-            $feedbacks = $feedbackWorkerRepository->findByMonth();
-            $grades = 0;
-            foreach ($feedbacks as $feedback){
-                $grades+= $feedback->getEstimation();
-            }
-            $grades= $grades/ count($feedbacks);
-            $kpi->setFactVolumeSales(1200);
-            $kpi->setFactQualityService(8);
-            $kpi->setWorker($worker);
-            $kpiRepository->add($kpi, true);
+            if ($kpi->getMinQualityService() < $kpi->getPlannedQualityService() && $kpi->getMinVolumeSales() < $kpi->getPlannedVolumeSales()) {
+                $reservations = $reservationRepository->findByMonth();
+                $summa = 0;
+                foreach ($reservations as $reservation) {
+                    $summa += $reservation->getPrice();
+                }
+                $feedbacks = $feedbackWorkerRepository->findByMonth();
+                $grades = 0;
+                foreach ($feedbacks as $feedback) {
+                    $grades += $feedback->getEstimation();
+                }
+                if (count($feedbacks) != 0) {
+                    $grades = $grades / count($feedbacks);
+                } else {
+                    $grades = 10;
+                }
+                $kpi->setFactVolumeSales($summa);
+                $kpi->setFactQualityService($grades);
+                $kpi->setWorker($worker);
+                $kpiRepository->add($kpi, true);
+                if ($kpi->getFactVolumeSales() > $kpi->getMinVolumeSales()) {
+                    $ind1 = ($kpi->getFactVolumeSales() - $kpi->getMinVolumeSales()) / ($kpi->getPlannedVolumeSales() - $kpi->getMinVolumeSales());
+                } else {
+                    $ind1 = 0;
+                }
+                if ($kpi->getFactQualityService() > $kpi->getMinQualityService()) {
+                    $ind2 = ($kpi->getFactQualityService() - $kpi->getMinQualityService()) / ($kpi->getPlannedQualityService() - $kpi->getMinQualityService());
+                } else {
+                    $ind2 = 0;
+                }
+                $salary_KPI = $ind1 * $kpi->getWeightVolumeSales() + $ind2 * $kpi->getWeightQualityService();
+                $salary = 0.5* $kpi->getWorker()->getSalary() +$salary_KPI *$kpi->getWorker()->getSalary();
 
-            $ind1 = ($kpi->getFactVolumeSales() - $kpi->getMinVolumeSales())/ ($kpi->getPlannedVolumeSales()-$kpi->getMinVolumeSales());
-
-            $ind2 = ($kpi->getFactQualityService()-$kpi->getMinQualityService())/($kpi->getPlannedQualityService()-$kpi->getMinQualityService());
-            $salary = $ind1 * $kpi->getWeightVolumeSales() + $ind2* $kpi->getWeightQualityService();
-            return $this->render('kpi/show.html.twig', [
-                'salary'=>$salary,
-                'kpi' => $kpi,
-            ]);
+                return $this->render('kpi/show.html.twig', [
+                    'salaryKPI' => $salary_KPI,
+                    'salary' => $salary,
+                    'kpi' => $kpi,
+                ]);
+            } else {
+                return $this->renderForm('kpi/new.html.twig', [
+                    'kpi' => $kpi,
+                    'form' => $form,
+                ]);
+            }
         }
-
         return $this->renderForm('kpi/new.html.twig', [
             'kpi' => $kpi,
             'form' => $form,
         ]);
+
+
     }
 
     #[Route('/{id}/{worker}', name: 'app_kpi_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Kpi $kpi, KpiRepository $kpiRepository, ReservationRepository $reservationRepository,
-    Worker $worker, FeedbackWorkerRepository $feedbackWorkerRepository): Response
+                         Worker  $worker, FeedbackWorkerRepository $feedbackWorkerRepository): Response
     {
         $form = $this->createForm(KpiType::class, $kpi);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservations = $reservationRepository->findByMonth();
-            $summa = 0;
-            foreach ($reservations as $reservation) {
-                $summa += $reservation->getPrice();
-            }
-            $feedbacks = $feedbackWorkerRepository->findByMonth();
-            $grades = 0;
-            foreach ($feedbacks as $feedback){
-                $grades+= $feedback->getEstimation();
-            }
-            $grades= $grades / count($feedbacks);
-            $kpi->setFactVolumeSales($summa);
-            $kpi->setFactQualityService($grades);
-            $kpi->setWorker($worker);
-            $kpiRepository->add($kpi, true);
+            if ($kpi->getMinQualityService() < $kpi->getPlannedQualityService() && $kpi->getMinVolumeSales() < $kpi->getPlannedVolumeSales()) {
 
-            $ind1 = ($kpi->getFactVolumeSales() - $kpi->getMinVolumeSales())/ ($kpi->getPlannedVolumeSales()-$kpi->getMinVolumeSales());
-            $ind2 = ($kpi->getFactQualityService()-$kpi->getMinQualityService())/($kpi->getPlannedQualityService()-$kpi->getMinQualityService());
-            $salary = $ind1 * $kpi->getWeightVolumeSales() + $ind2* $kpi->getWeightQualityService();
-            return $this->render('kpi/show.html.twig', [
-                'salary'=>$salary,
-                'kpi' => $kpi,
-            ]);
+                $reservations = $reservationRepository->findByMonth();
+                $summa = 0;
+                foreach ($reservations as $reservation) {
+                    $summa += $reservation->getPrice();
+                }
+                $feedbacks = $feedbackWorkerRepository->findByMonth();
+                $grades = 0;
+                foreach ($feedbacks as $feedback) {
+                    $grades += $feedback->getEstimation();
+                }
+                if (count($feedbacks) != 0) {
+                    $grades = $grades / count($feedbacks);
+                } else {
+                    $grades = 10;
+                }
+                $kpi->setFactVolumeSales($summa);
+                $kpi->setFactQualityService($grades);
+                $kpi->setWorker($worker);
+                $kpiRepository->add($kpi, true);
+                if ($kpi->getFactVolumeSales() > $kpi->getMinVolumeSales()) {
+                    $ind1 = ($kpi->getFactVolumeSales() - $kpi->getMinVolumeSales()) / ($kpi->getPlannedVolumeSales() - $kpi->getMinVolumeSales());
+                } else {
+                    $ind1 = 0;
+                }
+                if ($kpi->getFactQualityService() > $kpi->getMinQualityService()) {
+                    $ind2 = ($kpi->getFactQualityService() - $kpi->getMinQualityService()) / ($kpi->getPlannedQualityService() - $kpi->getMinQualityService());
+                } else {
+                    $ind2 = 0;
+                }
+                $salary_KPI = $ind1 * $kpi->getWeightVolumeSales() + $ind2 * $kpi->getWeightQualityService();
+                $salary = 0.5* $kpi->getWorker()->getSalary() +$salary_KPI *$kpi->getWorker()->getSalary();
+                return $this->render('kpi/show.html.twig', [
+                    'salaryKPI'=> $salary_KPI,
+                    'salary' => $salary,
+                    'kpi' => $kpi,
+                ]);
+            } else {
+                return $this->renderForm('kpi/new.html.twig', [
+                    'kpi' => $kpi,
+                    'form' => $form,
+                ]);
+            }
         }
 
         return $this->renderForm('kpi/new.html.twig', [

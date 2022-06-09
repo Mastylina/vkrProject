@@ -40,6 +40,9 @@ class Worker
     #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Diary::class, orphanRemoval: true)]
     private $diaries;
 
+    #[ORM\Column(type: 'integer')]
+    private $salary;
+
 
 
 
@@ -234,6 +237,18 @@ class Worker
                 $diary->setWorker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSalary(): ?int
+    {
+        return $this->salary;
+    }
+
+    public function setSalary(int $salary): self
+    {
+        $this->salary = $salary;
 
         return $this;
     }

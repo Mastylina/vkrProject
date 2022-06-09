@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заметки о {{ client.userClient.name }}{% endblock %}
+
+{% block body %}
+    <div class="container w-75 bg-gradient bg-light">
+        <h1>Заметки</h1>
+        <ul>
+            {% for record in records %}
+                <li>
+                    <p class="mb-4 fs-5">{{ record.text }}
+                    <a class="fs-6" href="{{ path('app_diary_edit', {'id': record.id, 'client' : client.id}) }}">изменить</a>
+                    {{include('diary/_delete_form.html.twig')}}
+                    </p>
+                </li>
+            {% else %}
+                <p>нет заметок</p>
+            {% endfor %}
+        </ul>
+        <a class="fs-5" href="{{ path('app_diary_new' , {'client' : client.id}) }}">Написать заметку</a>
+
+    </div>
+{% endblock %}

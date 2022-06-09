@@ -31,7 +31,19 @@ class ServiceType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('price')
+            ->add('price', NumberType::class, [
+                'label' => 'Цена',
+                'constraints' => [
+                    new Range([
+                        'notInRangeMessage' => 'Значение поля должно быть в пределах от {{ min }} до {{ max }}',
+                        'min' => 1,
+                        'max' => 100000,
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не может быть пустым',
+                    ]),
+                ],
+            ])
             ->add('executionTime')
             ->add('photo' , FileType::class, [
                 'label' => 'Фотография (файл png, jpg)',
@@ -47,7 +59,15 @@ class ServiceType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
 
             ])
-            ->add('description')
+            ->add('description', TextareaType::class, [
+                'label' => 'Описание',
+                'constraints' => [
+                    new Length([
+                        'max' => 1000,
+                        'maxMessage' => 'Превышена максимальная длина символов'
+                    ]),
+                ],
+            ])
             ->add('workers')
         ;
     }

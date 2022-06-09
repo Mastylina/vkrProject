@@ -27,10 +27,12 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{path('app_reservation_index')}}">Бронирования</a></li>
                     <li><a href="{{path('app_post_index')}}">Должность</a></li>
+                    <li><a href="{{path('app_message_index1')}}">Сообщения</a></li>
                 {%endif%}
                 {% if is_granted('ROLE_WORKER') %}
                     <li><a href="{{ path('app_schedule_report') }}">График работы</a></li>
                     <li><a href="{{path('app_message_index1')}}">Сообщения</a></li>
+                    <li><a href="{{path('app_diary_choice')}}">Заметки</a></li>
                 {% endif %}
                 {% if is_granted('ROLE_CLIENT') %}
                     <li><a href="/reservation">Записаться</a></li>

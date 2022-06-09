@@ -1,15 +1,30 @@
 
 {% block body %}
-    {{ include('reservation/_form.html.twig') }}
+
 
     <div class="container">
-        {% block title %}Информация о записи!{% endblock %}
-        <a>{{reservation.endTime|date('H:i')}}</a>
-        <a>{{reservation.startTime|date('H:i')}}</a>
-        <a>{{reservation.dateReservation|date('Y-m-d')}}</a>
-        <a>{{reservation.service.name}}</a>
-        <a>{{reservation.worker.userWorker.name}}</a>
-        <a>{{reservation.price}}</a>
-        <a href="{{ path('app_reservation') }}">Назад</a>
+        {{ include('reservation/_form.html.twig') }}
+        <div class="card">
+            <center>
+                <img class="card-img-top text-center"
+                     src="{{ asset('assets/main/img/workers/' ~ reservation.service.photo) }}" style="width:200px;"
+                     alt="Card image cap">
+            </center>
+            <div class="card-body">
+                <h5 class="card-title text-center">Информация о записи!</h5>
+                <p class="card-text text-center fs-5">
+                    <a style="color: #B0413E">Время начала процедуры {{reservation.startTime|date('H:i')}}</a><br>
+                    <a style="color: #B0413E">Дата бронирования {{reservation.dateReservation|date('Y-m-d')}}</a><br>
+                    <a>Приблизительное время окончания процедуры {{reservation.endTime|date('H:i')}}</a><br>
+                    <a>Название услуги {{reservation.service.name}}</a><br>
+                    <a>Имя работника {{reservation.worker.userWorker.name}}</a><br>
+                    <a>Цена за услугу {{reservation.price}}</a><br>
+                </p>
+
+            </div>
+        </div>
+
+
+        <a href="{{ path('app_reservation') }}">Отмена</a>
     </div>
 {% endblock %}

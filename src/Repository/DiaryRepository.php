@@ -38,7 +38,16 @@ class DiaryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function findByClientWorker($client, $worker)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.client = :client')
+            ->andWhere('m.worker = :worker')
+            ->setParameter('worker', $worker)
+            ->setParameter('client', $client)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Diary[] Returns an array of Diary objects
 //     */

@@ -29,6 +29,14 @@ class ReservationRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findByMaster($worker)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.worker = :worker')
+            ->setParameter('worker', $worker)
+            ->getQuery()
+            ->getResult();
+    }
 
     public function findByMonth()
     {

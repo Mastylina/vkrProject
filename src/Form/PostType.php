@@ -21,7 +21,7 @@ class PostType extends AbstractType
                 'label' => 'Должность',
                 'constraints' => [
                     new Length([
-                        'max' => 50,
+                        'max' => 12,
                         'maxMessage' => 'Превышена максимальная длина символов'
                     ]),
                     new NotBlank([

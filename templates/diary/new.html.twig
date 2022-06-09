@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новая заметка{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <h1 class="text-center">Заметка о клиенте {{client.userClient.surname}} {{client.userClient.name}} </h1>
+
+    {{ include('diary/_form.html.twig') }}
+
+    <a href="{{ path('app_diary_index', {'client' : client.id}) }}">back to list</a>
+    </div>
+{% endblock %}

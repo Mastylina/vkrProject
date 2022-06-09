@@ -4,10 +4,10 @@
 
 {% block body %}
     <div class="container">
-    <h1>Добавление работника</h1>
+
 
     {{ include('worker/_form.html.twig') }}
-
+        <h1>Добавление работника</h1>
     <a href="{{ path('app_worker_index') }}">Вернуться</a>
     </div>
 {% endblock %}
