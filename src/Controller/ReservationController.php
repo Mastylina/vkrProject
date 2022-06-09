@@ -171,8 +171,8 @@ class ReservationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->add($reservation);
 
-          /*  $email = (new Email())
-                ->from('annyasotovii12345@gmail.com')
+            $email = (new Email())
+                ->from('tema-man1@yandex.ru')
                 ->to($this->getUser()->getEmail())
                 ->subject('Вы записаны на услугу!')
                 ->text($this->renderView(
@@ -181,7 +181,7 @@ class ReservationController extends AbstractController
                 ]));
 
             $mailer->send($email);
-*/
+
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
