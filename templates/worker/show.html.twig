@@ -4,13 +4,44 @@
 
 {% block body %}
 
-<div class="container">
-    <h1 class="text-center">{{worker.userWorker.name}}</h1>
+    <div class="container">
+    <h1 class="text-center">{{ worker.userWorker.name }}</h1>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="container ">
+
+            <div class=" row row-cols-auto">
+                <div class="col">
+                    <a class="btn btn-secondary"
+                       href="{{ path('app_worker_edit', {'id': worker.id}) }}">Изменить</a>
+                </div>
+
+                <div class="col">
+                    {{ include('worker/_delete_form.html.twig') }}
+                </div>
+                {% if kpi %}
+                    <div class="col">
+                        <a class="btn btn-secondary "
+                           href="{{ path('app_kpi_show', {'id' : kpi[0].id, 'worker' : worker.id}) }}"> Рассчет
+                            KPI</a>
+                    </div>
+                {% else %}
+                    <div class="col">
+                        <a class="btn btn-secondary" href="{{ path('app_kpi_new',{ 'worker' : worker.id}) }}">
+                            Создать
+                            KPI</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+
+    {% endif %}
     <center>
         <div class="col-sm-6 my-md-2 text-center">
             <div class="card">
                 <center>
-                    <img class="card-img-top text-center" src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"  style="width:200px;" alt="Card image cap">
+                    <img class="card-img-top text-center" src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"
+                         style="width:200px;" alt="Card image cap">
                 </center>
                 <div class="card-body">
                     <p class="card-text">{{ worker.post.name }} </p>
@@ -28,16 +59,17 @@
                     {% for feedback in feedbacks %}
                         <div class="card mb-4">
                             <div class="card-body">
-                                <p>{{feedback.text}}</p>
+                                <p>{{ feedback.text }}</p>
 
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex flex-row align-items-center">
-                                        <p class="small mb-0 ms-2"> {{feedback.client.userClient.surname}} {{feedback.client.userClient.name}}  {{feedback.dateAndTime|date('Y-m-d')}}</p>
+                                        <p class="small mb-0 ms-2"> {{ feedback.client.userClient.surname }} {{ feedback.client.userClient.name }}  {{ feedback.dateAndTime|date('Y-m-d') }}</p>
                                     </div>
                                     <div class="d-flex flex-row align-items-center">
                                         <p class="small text-muted mb-0">Оценка</p>
-                                        <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                                        <p class="small text-muted mb-0">{{feedback.estimation}}</p>
+                                        <i class="far fa-thumbs-up mx-2 fa-xs text-black"
+                                           style="margin-top: -0.16rem;"></i>
+                                        <p class="small text-muted mb-0">{{ feedback.estimation }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -50,23 +82,6 @@
             </div>
         </div>
     </div>
-
-
-    {% if is_granted('ROLE_ADMIN') %}
-
-        {% if kpi %}
-            <a href="{{ path('app_kpi_show', {'id' : kpi[0].id, 'worker' : worker.id}) }}"> Рассчет KPI</a>
-        {% else %}
-            <a href="{{ path('app_kpi_new',{ 'worker' : worker.id}) }}"> Создать KPI</a>
-        {% endif %}
-    {% endif %}
-
-    <a href="{{ path('app_worker_index') }}">Вернуться на страницу с работниками</a>
-    {% if is_granted('ROLE_ADMIN') %}
-
-        <a href="{{ path('app_worker_edit', {'id': worker.id}) }}">Изменить</a>
-        {{ include('worker/_delete_form.html.twig') }}
-    {% endif %}
-</div>
+    </div>
 {% endblock %}
 

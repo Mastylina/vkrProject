@@ -4,16 +4,19 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="text-center">{{service.Name}}</h1>
+        <h1 class="text-center">{{ service.Name }}</h1>
         <center>
             <div class="col-sm-6 my-md-2 text-center">
                 <div class="card">
                     <center>
-                        <img class="card-img-top text-center" src="{{ asset('assets/main/img/services/' ~ service.photo) }}"  style="width:200px;" alt="Card image cap">
+                        <img class="card-img-top text-center"
+                             src="{{ asset('assets/main/img/services/' ~ service.photo) }}" style="width:200px;"
+                             alt="Card image cap">
                     </center>
                     <div class="card-body">
                         <h5 class="card-title">{{ service.name }}</h5>
-                        <p class="card-text">{{ service.description }} Стоимость услуги {{ service.price }} рублей Время выполнения {{ service.executionTime ? service.executionTime|date('H:i') : '' }}</p>
+                        <p class="card-text">{{ service.description }} Стоимость услуги {{ service.price }} рублей Время
+                            выполнения {{ service.executionTime ? service.executionTime|date('H:i') : '' }}</p>
                     </div>
                 </div>
             </div>
@@ -21,22 +24,27 @@
         <div class="container bg-gradient ">
             <h5 class="text-center">Список мастеров, выполняющие услугу {{ service.name }}</h5>
             <div class="container">
-                {% for worker in workers %}
-                    <div class="col-sm-3 my-md-2 text-center">
-                        <div class="card">
-                            <center>
-                                <img class="card-img-top text-center" src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"  style="width:200px;" alt="Card image cap">
-                            </center>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a class="fs-5 "  href="{{ path('app_worker_show', {'id': worker.id}) }}">{{worker.userWorker.name}}</a>
-                                </h5>
+                <div class="row">
+                    {% for worker in workers %}
+                        <div class="col-sm-3 my-md-2 text-center">
+                            <div class="card">
+                                <center>
+                                    <img class="card-img-top text-center"
+                                         src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"
+                                         style="width:75%; height: 130px;" alt="Card image cap">
+                                </center>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a class="fs-5 "
+                                           href="{{ path('app_worker_show', {'id': worker.id}) }}">{{ worker.userWorker.name }}</a>
+                                    </h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% else %}
-                    <h4>Нет мастеров</h4>
-                {% endfor %}
+                    {% else %}
+                        <h4>Нет мастеров</h4>
+                    {% endfor %}
+                </div>
 
 
             </div>
@@ -44,23 +52,24 @@
         <h5 class="text-center">Отзывы</h5>
 
 
-        <div class="row d-flex justify-content-center" >
+        <div class="row d-flex justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-0 border" style="background-color: #f0f2f5;">
                     <div class="card-body p-4">
                         {% for feedback in feedbacks %}
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <p>{{feedback.text}}</p>
+                                    <p>{{ feedback.text }}</p>
 
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex flex-row align-items-center">
-                                            <p class="small mb-0 ms-2"> {{feedback.client.userClient.surname}} {{feedback.client.userClient.name}}  {{feedback.dateAndTime|date('Y-m-d')}}</p>
+                                            <p class="small mb-0 ms-2"> {{ feedback.client.userClient.surname }} {{ feedback.client.userClient.name }}  {{ feedback.dateAndTime|date('Y-m-d') }}</p>
                                         </div>
                                         <div class="d-flex flex-row align-items-center">
                                             <p class="small text-muted mb-0">Оценка</p>
-                                            <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                                            <p class="small text-muted mb-0">{{feedback.estimation}}</p>
+                                            <i class="far fa-thumbs-up mx-2 fa-xs text-black"
+                                               style="margin-top: -0.16rem;"></i>
+                                            <p class="small text-muted mb-0">{{ feedback.estimation }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +85,7 @@
         {% if app.user %}
             <h1>Добавить отзыв</h1>
             {{ include('feedback/_form.html.twig') }}
-        {%endif%}
+        {% endif %}
         <a href="{{ path('app_service_index') }}">Вернуться к списку услуг</a>
 
     </div>

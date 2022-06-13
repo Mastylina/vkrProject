@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Feedback;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 /**
  * @extends ServiceEntityRepository<Feedback>
@@ -37,6 +38,14 @@ class FeedbackRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+    public function findByService($service)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.service = :service')
+            ->setParameter('service', $service)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

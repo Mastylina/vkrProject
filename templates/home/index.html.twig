@@ -14,7 +14,7 @@
     <p>Наш салон создан для тех, кто хочет получать не только качество, но высокий сервис, комфорт, окружать себя красотой и превращать поход в салон в приятное событие. Приходя к нам на процедуры вы не просто приводите себя в порядок, а отдыхаете душой и телом!</p>
     {% for service in services %}
         <figure>
-            <img src="{{ asset('assets/main/img/services/' ~ service.photo) }}" width="320" height="175" alt="">
+            <img src="{{ asset('assets/main/img/services/' ~ service.photo) }}" width="100%" height="175" alt="">
             <figcaption class="text-center">{{ service.name }}</figcaption>
         </figure>
     {% else %}
@@ -24,7 +24,7 @@
     <div class="team-row">
         {% for worker in workers %}
         <figure>
-            <img src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" width="96" height="96" alt="">
+            <img src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" width="110" height="96" alt="">
             <figcaption>{{ worker.userWorker.surname }} {{ worker.userWorker.name }}<span>{{ worker.post.name }}</span></figcaption>
         </figure>
         {% else %}

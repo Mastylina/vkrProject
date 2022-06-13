@@ -69,7 +69,7 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/new', name: 'app_service_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ServiceRepository $serviceRepository,SluggerInterface $slugger): Response
+    public function new(Request $request,WorkerRepository$workerRepository, ServiceRepository $serviceRepository,SluggerInterface $slugger): Response
     {
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
@@ -79,15 +79,16 @@ class ServiceController extends AbstractController
             $brochureFile = $form->get('photo')->getData();
             if ($brochureFile) {
                 $originalFilename = $brochureFile->getClientOriginalName();
+                $filename = md5(uniqid('', true)) . $originalFilename;
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochures_directory'),
                     $originalFilename
                 );
             }
-            $service->setPhoto($originalFilename);
-                $serviceRepository->add($service, true);
 
+            $service->setPhoto($filename);
+            $serviceRepository->add($service, true);
             return $this->redirectToRoute('app_service_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -152,13 +153,16 @@ class ServiceController extends AbstractController
             $brochureFile = $form->get('photo')->getData();
             if ($brochureFile) {
                 $originalFilename = $brochureFile->getClientOriginalName();
+
+                $filename = md5(uniqid('', true)) . $originalFilename;
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochures_directory'),
                     $originalFilename
                 );
             }
-            $service->setPhoto($originalFilename);
+
+            $service->setPhoto($filename);
             $serviceRepository->add($service, true);
 
             return $this->redirectToRoute('app_service_index', [], Response::HTTP_SEE_OTHER);

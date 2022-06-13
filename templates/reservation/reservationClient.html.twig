@@ -3,66 +3,80 @@
 {% block title %}Hello ReservationController!{% endblock %}
 
 {% block body %}
-    <div class="container-fluid w-75">
-        <h1> Ваши записи:</h1>
+    <div class="text-center container-fluid w-75">
+    <h1> Ваши записи:</h1>
 
-        {#если есть прошедшие записи#}
-        {% if reservationsPast or reservationsCurrent1 %}
-            <h3>Предыдущие записи:</h3>
-            {% for reservation in reservationsPast %}
+    {# если есть прошедшие записи #}
+    {% if reservationsPast or reservationsCurrent1 %}
+        <h3>Предыдущие записи:</h3>
+            <div class="row justify-content-md-center">
+                {% for reservation in reservationsPast %}
+                    <div class="col-sm-3 my-md-2 border border-4 border-info m-2">
+                        <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                        <p>Время начала процедуры {{ reservation.startTime|date('H:i') }} примерное время окончания
+                            процедуры {{ reservation.endTime|date('H:i') }}</p>
+                        <p>Ваш комментарий {{ reservation.comment }}</p>
+                        <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
+                    </div>
+                {% endfor %}
 
-                <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
-                <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
-                <p>Ваш комментарий {{ reservation.comment }}</p>
-                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
-
-            {% endfor %}
-
-            {#если есть сегоднешние записи которые прошли#}
+                {# если есть сегоднешние записи которые прошли #}
                 {% for reservation in reservationsCurrent1 %}
-                    <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                    <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
-                    <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
-                    <p>Ваш комментарий {{ reservation.comment }}</p>
-                    <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
+                    <div class="col-sm-3 my-md-2 border border-4 border-info m-2">
+                        <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                        <p>время начала процедуры {{ reservation.startTime|date('H:i') }}
+                            примерное время окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                        <p>Ваш комментарий {{ reservation.comment }}</p>
+                        <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
+                    </div>
                 {% endfor %}
-        {% endif %}
+            </div>
+    {% endif %}
 
-        {#если есть сегоднешние записи в данный момент#}
-        {% if reservationsCurrent2 %}
-            <h3>Текущие записи:</h3>
-            {% for reservation in reservationsCurrent2 %}
-                <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
-                <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
-                <p>Ваш комментарий {{ reservation.comment }}</p>
-                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
-            {% endfor %}
-        {% endif %}
 
-        {#если есть предстоящие записи#}
-        {% if reservationsFuture or reservationsCurrent3 %}
-            <h3>Предстоящие записи:</h3>
+    {# если есть сегоднешние записи в данный момент #}
+    {% if reservationsCurrent2 %}
+        <h3>Текущие записи:</h3>
+            <div class="row justify-content-md-center">
+                {% for reservation in reservationsCurrent2 %}
+                    <div class="col-sm-3 my-md-2 border border-4 border-info m-2">
+                        <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                        <p>Время начала процедуры {{ reservation.startTime|date('H:i') }}
+                            примерное время окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                        <p>Ваш комментарий {{ reservation.comment }}</p>
+                        <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+    {% endif %}
 
-            {#если есть сегоднешние записи которые предстоят#}
+
+    {# если есть предстоящие записи #}
+    {% if reservationsFuture or reservationsCurrent3 %}
+        <h3>Предстоящие записи:</h3>
+            <div class="row justify-content-md-center">
+                {# если есть сегоднешние записи которые предстоят #}
                 {% for reservation in reservationsCurrent3 %}
-                    <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                    <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}</p>
-                    <p>Примерная дата окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
-                    <p>Ваш комментарий {{ reservation.comment }}</p>
-                    <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
-                    {{include('reservation/_delete_form.html.twig')}}
+                    <div class="col-sm-3 my-md-2 border border-4 border-info m-2">
+                        <p class="text-info">Дата процедуры {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                        <p>Дата начала процедуры {{ reservation.startTime|date('H:i') }}
+                            примерное время окончания процедуры {{ reservation.endTime|date('H:i') }}</p>
+                        <p>Ваш комментарий {{ reservation.comment }}</p>
+                        <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}</p>
+                        {{ include('reservation/_delete_form.html.twig') }}
+                    </div>
                 {% endfor %}
 
-            {% for reservation in reservationsFuture %}
-                <p class="text-info">Дата процедуры: {{ reservation.dateReservation|date('Y-m-d') }}:</p>
-                <p>Дата начала процедуры: {{ reservation.startTime|date('H:i') }}</p>
-                <p>Примерная дата окончания процедуры: {{ reservation.endTime|date('H:i') }}</p>
-                <p>Ваш комментарий: {{ reservation.comment }}</p>
-                <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}.</p>
-                {{include('reservation/_delete_form.html.twig')}}
-            {% endfor %}
-        {% endif %}
-    </div>
+                {% for reservation in reservationsFuture %}
+                    <div class="col-sm-3 my-md-2 border border-4 border-info m-2">
+                        <p class="text-info">Дата процедуры: {{ reservation.dateReservation|date('Y-m-d') }}:</p>
+                        <p>Дата начала процедуры: {{ reservation.startTime|date('H:i') }}
+                            - примерное время окончания процедуры: {{ reservation.endTime|date('H:i') }}</p>
+                        <p>Ваш комментарий: {{ reservation.comment }}</p>
+                        <p>Мастер {{ reservation.worker.userWorker.name }} по услуге {{ reservation.service.name }}.</p>
+                        {{ include('reservation/_delete_form.html.twig') }}
+                    </div>
+                {% endfor %}
+            </div>
+    {% endif %}
 {% endblock %}

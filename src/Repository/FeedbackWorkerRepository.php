@@ -48,6 +48,14 @@ class FeedbackWorkerRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByWorker($worker)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.worker = :worker')
+            ->setParameter('worker', $worker)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return FeedbackWorker[] Returns an array of FeedbackWorker objects
 //     */

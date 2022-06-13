@@ -68,7 +68,6 @@ class ServiceType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('workers')
         ;
     }
 

@@ -70,7 +70,7 @@ class MessageRepository extends ServiceEntityRepository
             ->andWhere('m.worker = :worker')
             ->setParameter('worker', $worker)
             ->setParameter('client', $client)
-            ->orderBy('m.dateAndTime', 'ASC')
+            ->orderBy('m.dateAndTime', 'DESC')
             ->getQuery()
             ->getResult();
     }

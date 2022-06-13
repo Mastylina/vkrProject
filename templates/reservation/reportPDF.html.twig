@@ -3,7 +3,7 @@
 {% block body %}
     <h1 align="center">График работы</h1><hr>
 
-    <table align="center" class="table table-bordered border-dark bg-light">
+    <table align="center" class="tg">
         <thead>
         <tr>
             <th>Дата</th>
@@ -29,5 +29,46 @@
         {% endfor %}
         </tbody>
     </table>
+<style>
+    p {
+        line-height: 1;
+    }
 
+    table {
+        width: 100%;
+    }
+
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin: 0px auto;
+    }
+
+    .tg td {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        padding: 5px 5px;
+        word-break: normal;
+    }
+    .text-justify {
+        text-align: justify; /* Выравнивание по ширине */
+    }
+
+    .tg th {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        padding: 5px 5px;
+        word-break: normal;
+    }
+
+    .tg .tg-center {
+        border-color: inherit;
+        text-align: center;
+        vertical-align: center;
+    }
+</style>
 {% endblock %}

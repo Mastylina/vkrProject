@@ -3,75 +3,15 @@
 {% block title %}Hello MessageController!{% endblock %}
 
 {% block body %}
-    <style>
-
-
-        {
-            margin: 0
-        ;
-            padding: 0
-        ;
-            box-sizing: border-box
-        ;
-        }
-
-        .chat {
-            padding: 40px;
-        }
-
-        .message {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .message--user-1 + .message--user-2,
-        .message--user-2 + .message--user-1 {
-            margin-top: 1em;
-        }
-
-        .message--user-1 + .message--user-1,
-        .message--user-2 + .message--user-2 {
-            margin-top: .5em;
-        }
-
-        .message__time {
-            font-size: 10px;
-            color: #B0413E;
-            width: 100%;
-            margin: 0 0 5px 50px;
-        }
-
-        .message__author-pic {
-            margin: 0 10px 0 0;
-        }
-
-
-
-        .message--user-2 {
-            justify-content: flex-end;
-        }
-
-        .message--user-2 .message__time {
-            text-align: right;
-            margin: 0 50px 5px 0;
-        }
-
-        .message--user-2 .message__author-pic {
-            order: 1;
-            margin: 0 0 0 10px;
-        }
-
-        .message--user-2 .message__text {
-            background-color: #69b4f3;
-        }
-    </style>
-    <div class="js-last-comments container " style="overflow: scroll; height: 500px;">
-        {% include 'message/_messages_blocks.html.twig' %}
+   
+    <div class="js-last-comments container border border-2" style="overflow: scroll; height: 500px;">
+        {% include 'message/_messages_blocks_clients.html.twig' %}
     </div>
-    {{ include('message/_form.html.twig') }}
 
+    <div class="container">
+        <h5>Написать сообщение {{ worker.userWorker.name }}</h5>
+        {{ include('message/_form.html.twig') }}
+    </div>
     {% block javascripts %}
         {{ parent() }}
         <script>
@@ -79,7 +19,7 @@
             setInterval(function () {
                 $.ajax({
                     method: 'POST',
-                    url: {{path('last_comments', {'id': worker.id})}}
+                    url: {{ path('last_comments', {'id': worker.id}) }}
                 }).done(function (data) {
                     $(".js-last-comments").html(data);
                 });

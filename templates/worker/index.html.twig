@@ -4,15 +4,19 @@
 
 {% block body %}
     <div class="container">
+
         <h1>Работники студии</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn btn-secondary" href="{{ path('app_user_worker_new') }}">Добавить работника</a>
+        {% endif %}
         <div class="row">
             {% for worker in workers %}
                 {% if worker.userWorker.roles != ['ROLE_ADMIN'] %}
-                    <div class="col-sm-6 my-md-2">
-                        <div class="card">
+                    <div class="col-sm-4 my-md-2">
+                        <div class="card" style="height: 300px;">
                             <center>
-                                <img class="card-img-top text-center"
-                                     src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" style="width:200px;"
+                                <img class="card-img-top text-center w-75"
+                                     src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" style="height:200px;"
                                      alt="Card image cap">
                             </center>
                             <div class="card-body">
@@ -30,11 +34,10 @@
                 Работников не найдено
             {% endfor %}
         </div>
-
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_user_worker_new') }}">Создать</a>
-    {% endif %}
-    <a class="btn btn-outline-secondary mt-3" href="{{ path('app_home') }}">Вернуться на главную</a>
+        <div class="container">
+            <center>
+                <img src="https://quickchart.io/chart?c={{chartsOptions}}">
+            </center>
+        </div>
     </div>
 {% endblock %}

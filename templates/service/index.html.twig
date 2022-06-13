@@ -5,20 +5,29 @@
 {% block body %}
     <div class="container">
         <h1>Предоставляемые услуги</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class=" btn btn-primary" href="{{ path('app_service_new') }}">Создать</a>
+            <a class=" btn btn-primary" href="{{ path('app_service_report') }}">Отчёт</a>
+        {% endif %}
         <div class="row">
             {% for service in services %}
 
-                <div class="col-sm-6 my-md-2">
-                    <div class="card">
-                        <center>
-                        <img class="card-img-top text-center" src="{{ asset('assets/main/img/services/' ~ service.photo) }}"  style="width:200px;" alt="Card image cap">
-                        </center>
-                        <div class="card-body">
-                            <h5 class="card-title text-center">{{ service.name }}</h5>
-                            <p class="card-text text-center">{{ service.description }} Стоимость услуги {{ service.price }} рублей</p>
-                            <center>
-                            <a href="{{ path('app_service_show', {'id': service.id}) }}" class="card-link">Пройти</a>
-                            </center>
+                <div class="col-sm-4 my-md-2">
+                    <div class="card" style="height: 300px">
+
+                        <div class="card-body"
+                             style="background-image:url({{ asset('assets/main/img/services/' ~ service.photo) }});background-size: cover">
+                            <h5 class=" text-dark card-title text-center">
+                                {{ service.name }}
+                            </h5>
+                            <div class="opacity bg-light" style="height: 200px; ">
+                                <p class=" text-black card-text text-center ">{{ service.description }} Стоимость
+                                    услуги {{ service.price }} рублей
+                                </p>
+                            </div>
+                            <a href="{{ path('app_service_show', {'id': service.id}) }}"
+                               class="mt-2 card-link btn btn-primary">Пройти</a>
+
                         </div>
                     </div>
                 </div>
@@ -27,11 +36,10 @@
                 Услуг не найдено
             {% endfor %}
         </div>
-
-    {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('app_service_new') }}">Создать</a>
-    <a href="{{ path('app_service_report') }}">Отчёт</a>
-    {%endif%}
-    <a class="btn btn-outline-secondary mt-3" href="{{ path('app_home') }}">Вернуться на главную</a>
     </div>
+    <style>
+        .opacity {
+            opacity: 0.6;
+        }
+    </style>
 {% endblock %}

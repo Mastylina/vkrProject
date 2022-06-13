@@ -60,7 +60,14 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
+    public function findByServiceForReport($service)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.service = :service')
+            ->setParameter('service', $service)
+            ->getQuery()
+            ->getResult();
+    }
     public function findByService($service, $client)
     {
         return $this->createQueryBuilder('l')

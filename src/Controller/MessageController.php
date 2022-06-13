@@ -27,7 +27,8 @@ class MessageController extends AbstractController
             $count = count($messageRepository->findByNotRead($client, $worker->getUserWorker()));
             $checked[] = [$worker, $count];
         }
-        return $this->render('message/index.html.twig', [
+
+        return $this->render('message/index_client.html.twig', [
             'workers' => $checked,
         ]);
     }
@@ -42,7 +43,7 @@ class MessageController extends AbstractController
             $count = count($messageRepository->findByNotReadforWorker($worker, $client->getUserClient()));
             $checked[] = [$client, $count];
         }
-        return $this->render('message/index1.html.twig', [
+        return $this->render('message/index_worker.html.twig', [
             'clients' => $checked,
         ]);
     }
@@ -56,7 +57,7 @@ class MessageController extends AbstractController
         $unread = $messageRepository->findByNotRead($this->getUser(), $worker->getUserWorker());
 
         foreach ($unread as $message) {
-            $message->setCheckReading('true');
+            $message->setCheckReading(true);
             $messageRepository->add($message, true);
         }
         $client = $this->getUser()->getClient()->getId();
@@ -71,7 +72,7 @@ class MessageController extends AbstractController
             $message->setClient($client);
             $message->setSender($this->getUser());
             $message->setRecipient($worker->getUserWorker());
-            $message->setCheckReading('false');
+            $message->setCheckReading(false);
             $messageRepository->add($message, true);
             return $this->redirectToRoute('app_message', ['id' => $worker->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -85,7 +86,7 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/message1/{id}', name: 'app_message1', methods: ['GET', 'POST'])]
+    #[Route('/message1/{id}', name: 'app_message1', methods: ['GET', 'POST'])]//работник
     public function messageClientsChat(Request $request, Client $client, MessageRepository $messageRepository, ClientRepository $clientRepository): Response
     {
         //устанавливаем непрочитанные сообщения прочитанными
@@ -93,23 +94,23 @@ class MessageController extends AbstractController
         $unread = $messageRepository->findByNotReadforWorker($this->getUser(), $client->getUserClient());
 
         foreach ($unread as $message) {
-            $message->setCheckReading('true');
+            $message->setCheckReading(true);
             $messageRepository->add($message, true);
         }
         $worker = $this->getUser()->getWorker()->getId();
 
-        $message = new Message();
-        $form = $this->createForm(MessageType::class, $message);
+        $newMessage = new Message();
+        $form = $this->createForm(MessageType::class, $newMessage);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $message->setDateAndTime(new \DateTime());
-            $message->setClient($client->getId());
-            $message->setWorker($worker);
-            $message->setSender($this->getUser());
-            $message->setRecipient($client->getUserClient());
-            $message->setCheckReading('false');
-            $messageRepository->add($message, true);
+            $newMessage->setDateAndTime(new \DateTime());
+            $newMessage->setClient($client->getId());
+            $newMessage->setWorker($worker);
+            $newMessage->setSender($this->getUser());
+            $newMessage->setRecipient($client->getUserClient());
+            $newMessage->setCheckReading(false);
+            $messageRepository->add($newMessage, true);
             return $this->redirectToRoute('app_message1', ['id' => $client->getId()], Response::HTTP_SEE_OTHER);
         }
         $comments = $messageRepository->findByClientByWorker($client->getId(), $worker);
@@ -130,7 +131,7 @@ class MessageController extends AbstractController
         dd($client);
         $comments = $messageRepository->findByClientByWorker($client, $worker->getId());
 
-        $lastComments = $this->renderView('message/_messages_blocks.html.twig', [
+        $lastComments = $this->renderView('_messages_blocks_clients.html.twig', [
             'comments' => $comments
         ]);
 
@@ -142,7 +143,7 @@ class MessageController extends AbstractController
         $worker = $this->getUser()->getWorker()->getId();
         $comments = $messageRepository->findByClientByWorker($worker, $client->getId());
 
-        $lastComments = $this->renderView('message/_messages_blocks1.html.twig', [
+        $lastComments = $this->renderView('_messages_blocks_workers.html.twig', [
             'comments' => $comments
         ]);
 

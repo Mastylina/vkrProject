@@ -3,10 +3,11 @@
 {% block title %}Kpi{% endblock %}
 
 {% block body %}
+    <div class="container">
     <h1>Kpi</h1>
 
-    <table class="table">
-        <tbody>
+        <table class="table">
+            <tbody>
             <tr>
                 <th>Вес объёма продаж</th>
                 <td>{{ kpi.weightVolumeSales }}</td>
@@ -39,9 +40,11 @@
                 <th>Планируемая величина качества обслуживания</th>
                 <td>{{ kpi.plannedQualityService }}</td>
             </tr>
-        </tbody>
-    </table>
-    <h1>Коэффицент {{salaryKPI}}</h1>
-    <h1>Заработанная плата {{salary}}</h1>
+            </tbody>
+        </table>
+
+    <h1>Коэффицент {{ salaryKPI }}</h1>
+    <h1>Заработанная плата {{ salary }}</h1>
     {{ include('kpi/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

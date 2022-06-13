@@ -1,0 +1,18 @@
+{% for comment in comments %}
+    {% if comment.sender.roles == ['ROLE_WORKER'] or  comment.sender.roles == ['ROLE_ADMIN'] %}
+        <div class="chat w-50 container">
+            <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
+
+            <div class="text-black text-center  rounded-3 bg-info" style="height: 50px;">
+                <p>{{ comment.textMessage }}</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="chat w-50 container">
+            <time class="message__time">{{ comment.dateAndTime|date('H:i Y-m-d') }}</time>
+            <div class="text-black text-center  bg-secondary rounded-3" style="height: 50px;">
+                <p>{{ comment.textMessage }}</p>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

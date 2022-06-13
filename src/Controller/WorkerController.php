@@ -24,9 +24,61 @@ use Symfony\Component\Routing\Annotation\Route;
 class WorkerController extends AbstractController
 {
     #[Route('/', name: 'app_worker_index', methods: ['GET'])]
-    public function index(WorkerRepository $workerRepository): Response
+    public function index(WorkerRepository $workerRepository, FeedbackWorkerRepository $feedbackWorkerRepository): Response
     {
+        $workers = $workerRepository->findAll();
+        $nameWorker = array();
+        $averages = array();
+
+        foreach ($workers as $worker) {
+            $nameWorker[] = $worker->getUserWorker()->getName();
+            $feedbacks = $feedbackWorkerRepository->findByWorker($worker);
+            $summ = 0;
+            foreach ($feedbacks as $feedback) {
+                $summ += $feedback->getEstimation();
+            }
+            if (count($feedbacks) === 0){
+                $averages[] = 0;
+            } else {
+                $averages[]= $summ/count($feedbacks);
+            }
+        }
+
+
+        $options = [
+            'type' => 'bar',
+            'data' => [
+                'labels' => $nameWorker,
+                'datasets' => [
+                    [
+                        'data' => $averages
+                    ],
+                ]
+            ],
+            'options' => [
+                'legend' => [
+                    'display' => false,
+                ],
+                'title' => [
+                    'display' => true,
+                    'text' => 'Рейтинг мастеров'
+                ],
+                'scales' => [
+                    'xAxes' => [
+                        [
+                            'ticks' => [
+                                'fontSize' => 8
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $chartsOptions = urlencode(json_encode($options));
         return $this->render('worker/index.html.twig', [
+            'controller_name' => 'WorkerController',
+            'chartsOptions' => $chartsOptions,
             'workers' => $workerRepository->findAll(),
         ]);
     }
@@ -64,14 +116,16 @@ class WorkerController extends AbstractController
             $brochureFile = $form->get('photo')->getData();
             if ($brochureFile) {
                 $originalFilename = $brochureFile->getClientOriginalName();
+                $filename = md5(uniqid('', true)) . $originalFilename;
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochur_directory'),
-                    $originalFilename
+                    $filename
                 );
             }
+
             $worker->setUserWorker($user);
-            $worker->setPhoto($originalFilename);
+            $worker->setPhoto($filename);
             $workerRepository->add($worker, true);
             return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -128,14 +182,14 @@ class WorkerController extends AbstractController
             $brochureFile = $form->get('photo')->getData();
             if ($brochureFile) {
                 $originalFilename = $brochureFile->getClientOriginalName();
+                $filename = md5(uniqid('', true)) . $originalFilename;
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochur_directory'),
-                    $originalFilename
+                    $filename
                 );
             }
-
-            $worker->setPhoto($originalFilename);
+            $worker->setPhoto($filename);
             $workerRepository->add($worker, true);
 
             return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
