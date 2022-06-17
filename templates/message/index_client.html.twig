@@ -8,11 +8,12 @@
     <ul>
         {% for worker in workers %}
             <li><a type="button" class="btn btn-primary" href="{{ path('app_message', {'id' : worker[0].id}) }}">
-                    {{ worker[0].userWorker.Name }}
+                    {{ worker[0].userWorker.Name }} {{ worker[0].userWorker.surname }}
                     {% if worker[1] > 0 %}
                         <span class="badge badge-light">{{ worker[1] }}</span>
                     {% endif %}
                 </a></li>
+            <p></p>
         {% endfor %}
     </ul>
     </div>

@@ -4,20 +4,32 @@
 
 {% block body %}
     <div class="container w-75 bg-gradient bg-light">
-        <h1>Заметки</h1>
-        <ul>
-            {% for record in records %}
-                <li>
-                    <p class="mb-4 fs-5">{{ record.text }}
-                    <a class="fs-6" href="{{ path('app_diary_edit', {'id': record.id, 'client' : client.id}) }}">изменить</a>
-                    {{include('diary/_delete_form.html.twig')}}
-                    </p>
-                </li>
-            {% else %}
-                <p>нет заметок</p>
-            {% endfor %}
-        </ul>
-        <a class="fs-5" href="{{ path('app_diary_new' , {'client' : client.id}) }}">Написать заметку</a>
+        <center>
+            <h1>Заметки</h1>
+            <div class="container">
+                {% for record in records %}
+                <center>
+                    <div class="row row-cols-auto border border-dark justify-content-md-center p-4 m-4">
 
+                            <div class="col">
+                                <h3> {{ record.text }}</h3>
+                            </div>
+                            <div class="col">
+                                <a class="fs-6"
+                                   href="{{ path('app_diary_edit', {'id': record.id, 'client' : client.id}) }}">изменить</a>
+                            </div>
+
+                            <div class="col"> {{ include('diary/_delete_form.html.twig') }}</div>
+
+                    </div>
+                </center>
+                {% else %}
+                    <p>нет заметок</p>
+                {% endfor %}
+
+            </div>
+            <a class="fs-5" href="{{ path('app_diary_new' , {'client' : client.id}) }}">Написать заметку</a>
+        </center>
     </div>
+
 {% endblock %}

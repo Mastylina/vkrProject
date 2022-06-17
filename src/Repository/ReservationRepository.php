@@ -37,7 +37,19 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
+    public function findByMasterPerMonth($worker)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.worker = :worker')
+            ->andWhere('l.dateReservation <= :now')
+            ->andWhere('l.dateReservation >= :noNow')
+            ->andWhere('l.checked = true')
+            ->setParameter('now', date('Y-m-d', strtotime('today')))
+            ->setParameter('noNow', date('Y-m-d', strtotime('-1 month', strtotime('today'))))
+            ->setParameter('worker', $worker)
+            ->getQuery()
+            ->getResult();
+    }
     public function findByMonth()
     {
         return $this->createQueryBuilder('l')
@@ -106,8 +118,9 @@ class ReservationRepository extends ServiceEntityRepository
             ->andWhere('l.worker = :worker')
             ->setParameter('dateToday', $dateDay)
             ->setParameter('worker', $master)
-            ->orderBy('l.startTime', 'ASC')
-            ->orderBy('l.dateReservation', 'ASC')
+            ->addOrderBy('l.dateReservation', 'ASC')
+            ->addOrderBy('l.startTime', 'ASC')
+
             ->getQuery()
             ->getResult();
     }

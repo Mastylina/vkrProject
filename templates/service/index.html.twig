@@ -10,6 +10,7 @@
             <a class=" btn btn-primary" href="{{ path('app_service_report') }}">Отчёт</a>
         {% endif %}
         <div class="row">
+
             {% for service in services %}
 
                 <div class="col-sm-4 my-md-2">
@@ -19,11 +20,15 @@
                              style="background-image:url({{ asset('assets/main/img/services/' ~ service.photo) }});background-size: cover">
                             <h5 class=" text-dark card-title text-center">
                                 {{ service.name }}
+
                             </h5>
                             <div class="opacity bg-light" style="height: 200px; ">
                                 <p class=" text-black card-text text-center ">{{ service.description }} Стоимость
                                     услуги {{ service.price }} рублей
                                 </p>
+                                <center>
+                                <h3>Средний рейтинг {{ averages[service.name] }}</h3>
+                                </center>
                             </div>
                             <a href="{{ path('app_service_show', {'id': service.id}) }}"
                                class="mt-2 card-link btn btn-primary">Пройти</a>

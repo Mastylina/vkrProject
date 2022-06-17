@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Worker index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <table class="table border border-3 fs-5">
+            <thead>
+            <th>
+                <p>Сотрудник</p>
+            </th>
+            <th>
+                <p>Количество обслуживаемых клиентов</p>
+            </th>
+            <th>
+                <p>Выручка</p>
+            </th>
+            </thead>
+            <tbody>
+            {% for worker in workers%}
+           <tr>
+               <td>{{worker.userWorker.surname}} {{worker.userWorker.name}}</td>
+               <td>{{count[worker.id]}}</td>
+               <td>{{revenue[worker.id]}}</td>
+           </tr>
+            {%endfor%}
+            <tr>
+                <td></td>
+                <td><h3>Общая выручка:</h3></td>
+                <td> {{total}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

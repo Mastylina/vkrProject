@@ -66,7 +66,7 @@ class KpiController extends AbstractController
                     $ind2 = 0;
                 }
                 $salary_KPI = $ind1 * $kpi->getWeightVolumeSales() + $ind2 * $kpi->getWeightQualityService();
-                $salary = 0.5* $kpi->getWorker()->getSalary() +$salary_KPI *$kpi->getWorker()->getSalary();
+                $salary = 0.5* $kpi->getWorker()->getSalary() +0.5 * $kpi->getWorker()->getSalary() + $kpi->getPrize()*$salary_KPI;
 
                 return $this->render('kpi/show.html.twig', [
                     'salaryKPI' => $salary_KPI,
@@ -128,7 +128,7 @@ class KpiController extends AbstractController
                     $ind2 = 0;
                 }
                 $salary_KPI = $ind1 * $kpi->getWeightVolumeSales() + $ind2 * $kpi->getWeightQualityService();
-                $salary = 0.5* $kpi->getWorker()->getSalary() +$salary_KPI *$kpi->getWorker()->getSalary();
+                $salary = 0.5* $kpi->getWorker()->getSalary() +0.5 * $kpi->getWorker()->getSalary() + $kpi->getPrize()*$salary_KPI;
                 return $this->render('kpi/show.html.twig', [
                     'salaryKPI'=> $salary_KPI,
                     'salary' => $salary,

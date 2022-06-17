@@ -17,6 +17,20 @@ class KpiType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+
+            ->add('prize', NumberType::class, [
+                'label' => 'Премия',
+                'constraints' => [
+                    new Range([
+                        'notInRangeMessage' => 'Значение поля должно быть в пределах от {{ min }} до {{ max }}',
+                        'min' => 1,
+                        'max' => 100000,
+                    ]),
+                    new NotBlank([
+                        'message' => 'Поле не может быть пустым',
+                    ]),
+                ],
+            ])
             ->add('weightVolumeSales', NumberType::class, [
                 'label' => 'Вес объёма продаж',
                 'constraints' => [

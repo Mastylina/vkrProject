@@ -37,10 +37,10 @@ class WorkerController extends AbstractController
             foreach ($feedbacks as $feedback) {
                 $summ += $feedback->getEstimation();
             }
-            if (count($feedbacks) === 0){
+            if (count($feedbacks) === 0) {
                 $averages[] = 0;
             } else {
-                $averages[]= $summ/count($feedbacks);
+                $averages[] = $summ / count($feedbacks);
             }
         }
 
@@ -132,7 +132,7 @@ class WorkerController extends AbstractController
         return $this->renderForm('worker/newWorker.html.twig', ['form' => $form,]);
     }
 
-    #[ Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
+    #[Route('/{id}', name: 'app_worker_show', methods: ['GET', 'POST'])]
     public function show(KpiRepository $kpiRepository, Worker $worker, Request $request, FeedbackWorkerRepository $feedbackWorkerRepository, ReservationRepository $reservationRepository): Response
     {
         if ($this->getUser()) {
@@ -201,7 +201,7 @@ class WorkerController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_worker_delete', methods: ['GET','POST'])]
+    #[Route('/delete/{id}', name: 'app_worker_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Worker $worker, WorkerRepository $workerRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $worker->getId(), $request->request->get('_token'))) {
@@ -209,5 +209,31 @@ class WorkerController extends AbstractController
         }
 
         return $this->redirectToRoute('app_worker_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/earnings/report', name: 'app_worker_earnings_report', methods: ['GET', 'POST'])]
+    public function earningsReport(WorkerRepository $workerRepository, ReservationRepository $reservationRepository): Response
+    {
+        $count = array();
+        $workers = $workerRepository->findAll();
+        $totalRevenue =0;
+        $revenue = array();
+        foreach ($workers as $worker) {
+            $reservations = $reservationRepository->findByMasterPerMonth($worker);
+            $count[$worker->getId()] = count($reservations);
+            $sum = 0;
+            foreach ($reservations as $reservation) {
+                $sum += $reservation->getPrice();
+            }
+            $revenue[$worker->getId()]=$sum;
+            $totalRevenue+=$sum;
+        }
+
+        return $this->render('worker/earningsReport.html.twig', [
+            'workers' => $workers,
+            'count' => $count,
+            'revenue' => $revenue,
+            'total' => $totalRevenue,
+        ]);
     }
 }

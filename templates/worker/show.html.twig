@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="container">
-    <h1 class="text-center">{{ worker.userWorker.name }}</h1>
+    <h1 class="text-center">{{ worker.userWorker.name }} {{ worker.userWorker.surname }}</h1>
     {% if is_granted('ROLE_ADMIN') %}
         <div class="container ">
 
@@ -21,14 +21,13 @@
                 {% if kpi %}
                     <div class="col">
                         <a class="btn btn-secondary "
-                           href="{{ path('app_kpi_show', {'id' : kpi[0].id, 'worker' : worker.id}) }}"> Рассчет
-                            KPI</a>
+                           href="{{ path('app_kpi_show', {'id' : kpi[0].id, 'worker' : worker.id}) }}"> Расчет
+                            ЗП</a>
                     </div>
                 {% else %}
                     <div class="col">
                         <a class="btn btn-secondary" href="{{ path('app_kpi_new',{ 'worker' : worker.id}) }}">
-                            Создать
-                            KPI</a>
+                            Расчёт ЗП</a>
                     </div>
                 {% endif %}
             </div>

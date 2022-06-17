@@ -25,7 +25,6 @@
                 <a class="btn" href="/service/">Предоставляемые услуги</a>
                 <a class="btn" href="/worker">Наши работники</a>
                 <a class="btn" href="/about">О нас</a>
-                <a class="btn" href="">Акции</a>
                 {% if is_granted('ROLE_ADMIN') %}
                     <a class="btn" href="{{ path('app_reservation_index') }}">Бронирования</a>
                     <a class="btn" href="{{ path('app_post_index') }}">Должность</a>

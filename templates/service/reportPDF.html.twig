@@ -1,12 +1,13 @@
 
 
 {% block body %}
-    <h1 align="center">Report</h1>
+    <h1 align="center">Отчет</h1>
 
-    <table class="table">
+    <table class="table tg">
         <thead>
         <tr>
             <th>Название услуги</th>
+            <th>Средняя оценка</th>
             <th>Описание</th>
         </tr>
         </thead>
@@ -14,10 +15,52 @@
         {% for service in services %}
             <tr>
                 <td>{{ service.name }}</td>
+                <td style="align-items: center">{{ average[service.name]}}</td>
                 <td>{{ service.description }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <style>
+        p {
+            line-height: 1;
+        }
 
+        table {
+            width: 100%;
+        }
+
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0px auto;
+        }
+
+        .tg td {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            padding: 5px 5px;
+            word-break: normal;
+        }
+        .text-justify {
+            text-align: justify; /* Выравнивание по ширине */
+        }
+
+        .tg th {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            padding: 5px 5px;
+            word-break: normal;
+        }
+
+        .tg .tg-center {
+            border-color: inherit;
+            text-align: center;
+            vertical-align: center;
+        }
+    </style>
 {% endblock %}

@@ -41,6 +41,9 @@ class Kpi
     #[ORM\JoinColumn(nullable: false)]
     private $worker;
 
+    #[ORM\Column(type: 'integer')]
+    private $prize;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +153,18 @@ class Kpi
     public function setWorker(Worker $worker): self
     {
         $this->worker = $worker;
+
+        return $this;
+    }
+
+    public function getPrize(): ?int
+    {
+        return $this->prize;
+    }
+
+    public function setPrize(int $prize): self
+    {
+        $this->prize = $prize;
 
         return $this;
     }

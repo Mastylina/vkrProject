@@ -29,17 +29,20 @@
         <div class="container bg-gradient ">
             <h5 class="text-center">Список мастеров, выполняющие услугу {{ service.name }}</h5>
             <div class="container">
+
                 <div class="row">
+
                     {% for worker in workers %}
                         <div class="col-sm-3 my-md-2 text-center">
                             <div class="card" style="height:180px;">
                                 <center>
                                     <img class="card-img-top text-center"
                                          src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}"
-                                         style="width:75%; height: 130px;"
+                                         style="width:65%; height: 130px;"
                                          alt="Card image cap">
                                 </center>
                                 <div class="card-body"
+
                                      style="background-image: url("{{ asset('assets/main/img/workers/' ~ worker.photo) }}")">
                                     <h5 class="card-title">
                                         <a class="fs-5 "

@@ -35,15 +35,16 @@ class ReservationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $thisDate = new \DateTime;
-            $message='eror';
-            if ($data->getWorker()->getUserWorker()->getRoles() != ['ROLE_ADMIN'] and $data->getDateReservation() >= $thisDate) {
+
+            if ($data->getWorker()->getUserWorker()->getRoles() != ['ROLE_ADMIN'] and $data->getDateReservation()->format('Y-m-d') >= $thisDate->format('Y-m-d')) {
 
                 return $this->forward('App\Controller\ReservationController::choiceTime', [
                     'data' => $data,
                 ]);
             } else if ($data->getWorker()->getUserWorker()->getRoles() == ['ROLE_ADMIN']) {
                 $message = 'Данный сотрудник не оказывает эту услугу';
-            } else if ($data->getDateReservation() < $thisDate ) {
+            } else if ($data->getDateReservation()->format('Y-m-d') < $thisDate->format('Y-m-d') ) {
+
                 $message = 'Нельзя выбирать прошедшую дату';
             }
 
@@ -56,7 +57,8 @@ class ReservationController extends AbstractController
 
 
 return $this->renderForm('reservation/_form.html.twig', ['reservation' => $reservation,
-'form' => $form,]);
+'form' => $form,
+'message' => null]);
 }
 
 #[
@@ -151,7 +153,7 @@ Route('reservation/choiceTime', name: 'app_choice_time')]
     }
 
     //Добавить в БД поле сумма за бронь summa
-    if ($summa > 10000 && $summa < 15999) {
+    if ($summa > 3000 && $summa < 15999) {
 
         $discont = 2;
     } elseif ($summa > 16000 && $summa < 25999) {
@@ -197,6 +199,7 @@ Route('reservation/choiceTime', name: 'app_choice_time')]
     return $this->renderForm('reservation/info.html.twig', [
         'reservation' => $reservation,
         'form' => $form,
+        'discont' => $discont,
     ]);
 }
     #[Route('/reportPDFWorkerSchedule', name: 'app_schedule_report', methods: ['GET'])]

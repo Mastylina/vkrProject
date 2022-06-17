@@ -21,10 +21,10 @@
         Работников не найдено
     {% endfor %}
     <h2 class="text-center">Наша команда</h2>
-    <div class="team-row">
+    <div class="row">
         {% for worker in workers %}
-        <figure>
-            <img src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" width="110" height="96" alt="">
+        <figure class="col">
+            <img src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" width="130" height="96" alt="">
             <figcaption>{{ worker.userWorker.surname }} {{ worker.userWorker.name }}<span>{{ worker.post.name }}</span></figcaption>
         </figure>
         {% else %}

@@ -128,7 +128,6 @@ class MessageController extends AbstractController
     {
 
         $client = $this->getUser()->getClient()->getId();
-        dd($client);
         $comments = $messageRepository->findByClientByWorker($client, $worker->getId());
 
         $lastComments = $this->renderView('_messages_blocks_clients.html.twig', [

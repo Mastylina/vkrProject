@@ -8,15 +8,16 @@
         <h1>Работники студии</h1>
         {% if is_granted('ROLE_ADMIN') %}
             <a class="btn btn-secondary" href="{{ path('app_user_worker_new') }}">Добавить работника</a>
+            <a class="btn btn-secondary" href="{{ path('app_worker_earnings_report') }}">Отчет о заработке</a>
         {% endif %}
         <div class="row">
             {% for worker in workers %}
                 {% if worker.userWorker.roles != ['ROLE_ADMIN'] %}
-                    <div class="col-sm-4 my-md-2">
+                    <div class="col-sm-4 my-md-3">
                         <div class="card" style="height: 300px;">
                             <center>
                                 <img class="card-img-top text-center w-75"
-                                     src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" style="height:200px;"
+                                     src="{{ asset('assets/main/img/workers/' ~ worker.photo) }}" style="height:220px;"
                                      alt="Card image cap">
                             </center>
                             <div class="card-body">

@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="container">
+        <center>
     <h1> Не подтвержденные бронирования:</h1>
     {% for reservation in reservations %}
         <div>
@@ -12,4 +14,6 @@
             <a href="{{ path('app_reservation_set_check', {'reservation' : reservation.id}) }}">Подвердить что процедура завершена</a>
         </div>
     {% endfor %}
+        </center>
+    </div>
 {% endblock %}

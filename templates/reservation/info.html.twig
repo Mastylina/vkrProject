@@ -16,6 +16,7 @@
                 <a>Название услуги {{ reservation.service.name }}</a><br>
                 <a>Имя работника {{ reservation.worker.userWorker.name }}</a><br>
                 <a>Цена за услугу {{ reservation.price }}</a><br>
+                <a>Ваша скидка составила {{ discont }}%</a><br>
             </p>
             {{ form_start(form) }}
             <div class="container">

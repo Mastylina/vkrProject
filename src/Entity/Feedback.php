@@ -6,7 +6,7 @@ use App\Repository\FeedbackRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedbackRepository::class)]
-class Feedback
+class   Feedback
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

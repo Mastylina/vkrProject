@@ -8,6 +8,7 @@ use App\Entity\Worker;
 use App\Entity\Client;
 use App\Form\FeedbackType;
 use App\Repository\FeedbackRepository;
+use App\Repository\FeedbackWorkerRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\WorkerRepository;
 use App\Entity\User;
@@ -28,16 +29,50 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ServiceController extends AbstractController
 {
     #[Route('/', name: 'app_service_index', methods: ['GET'])]
-    public function index(ServiceRepository $serviceRepository): Response
+    public function index(ServiceRepository $serviceRepository, FeedbackRepository $feedbackRepository): Response
     {
+        $services = $serviceRepository->findAll();
+        $nameService = array();
+        $averages = array();
+
+        foreach ($services as $service) {
+            $nameService[] = $service->getName();
+            $feedbacks = $feedbackRepository->findByService($service);
+            $summ = 0;
+            foreach ($feedbacks as $feedback) {
+                $summ += $feedback->getEstimation();
+            }
+            if (count($feedbacks) === 0){
+                $averages[$service->getName()] = 0;
+            } else {
+                $averages[$service->getName()]= $summ/count($feedbacks);
+            }
+        }
         return $this->render('service/index.html.twig', [
-            'services' => $serviceRepository->findAll(),
+            'nameService'=>$nameService,
+            'averages'=>$averages,
+            'services' => $services,
         ]);
     }
 
     #[Route('/reportPDF', name: 'app_service_report', methods: ['GET'])]
-    public function report(ServiceRepository $serviceRepository): Response
+    public function report(ServiceRepository $serviceRepository, FeedbackRepository $feedbackRepository): Response
     {
+        $services = $serviceRepository->findAll();
+        $averages = array();
+
+        foreach ($services as $service) {
+            $feedbacks = $feedbackRepository->findByService($service);
+            $summ = 0;
+            foreach ($feedbacks as $feedback) {
+                $summ += $feedback->getEstimation();
+            }
+            if (count($feedbacks) === 0){
+                $averages[$service->getName()] = 0;
+            } else {
+                $averages[$service->getName()]= $summ/count($feedbacks);
+            }
+        }
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'arial');
@@ -48,6 +83,7 @@ class ServiceController extends AbstractController
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView('service/reportPDF.html.twig', [
             'services' => $serviceRepository->findAll(),
+            'average' => $averages,
         ]);
 
         // Load HTML to Dompdf
@@ -64,7 +100,8 @@ class ServiceController extends AbstractController
             "Attachment" => true
         ]);
         return $this->render('service/reportPDF.html.twig', [
-            'services' => $serviceRepository->findAll(),
+            'services' => $services,
+            'average' => $averages,
         ]);
     }
 
@@ -83,7 +120,7 @@ class ServiceController extends AbstractController
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochures_directory'),
-                    $originalFilename
+                    $filename
                 );
             }
 
@@ -158,7 +195,7 @@ class ServiceController extends AbstractController
                 // this is needed to safely include the file name as part of the URL
                 $brochureFile->move(
                     $this->getParameter('brochures_directory'),
-                    $originalFilename
+                    $filename
                 );
             }
 
