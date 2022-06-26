@@ -3,17 +3,38 @@
 {% block body %}
     <div class="container">
         <center>
-    <h1> Не подтвержденные бронирования:</h1>
-    {% for reservation in reservations %}
-        <div>
-            {{ reservation.dateReservation|date('Y-m-d') }}
-            {{ reservation.startTime|date('H:i') }}
-            {{ reservation.endTime|date('H:i') }}
-            {{ reservation.worker }}
-            {{ reservation.client.userClient.name }}
-            <a href="{{ path('app_reservation_set_check', {'reservation' : reservation.id}) }}">Подвердить что процедура завершена</a>
-        </div>
-    {% endfor %}
+            <h1> Не подтвержденные бронирования:</h1>
+            <table class="table table-striped">
+                <thead>
+                <th>Дата бронировани</th>
+                <th>Время начала процедуры</th>
+                <th>Время окончания процедуры</th>
+                <th>Мастер</th>
+                <th>Клиент</th>
+                <th></th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.dateReservation|date('Y-m-d') }}</td>
+                        <td>{{ reservation.startTime|date('H:i') }}</td>
+                        <td>{{ reservation.endTime|date('H:i') }}</td>
+                        <td>{{ reservation.worker.userWorker.surname }} {{reservation.worker.userWorker.name}}</td>
+                        <td>{{ reservation.client.userClient.surname }} {{ reservation.client.userClient.name }} </td>
+                        <td>
+                            <form method="post" action="{{ path('app_reservation_set_check', {'reservation': reservation.id}) }}"
+                                  onsubmit="return confirm('Вы уверены?');">
+                                <button class="btn btn-link">Подвердить
+                                    что процедура завершена
+                                </button>
+                            </form>
+                        </td>
+                        <td>{{include('reservation/_delete_form.html.twig')}}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </center>
     </div>
 {% endblock %}

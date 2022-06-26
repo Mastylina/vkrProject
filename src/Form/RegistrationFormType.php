@@ -37,8 +37,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('birthdate', BirthdayType::class, [
                     'label' => 'Дата рождения',
-                    'widget' => 'choice',
+                    'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
+
                     'data' => new \DateTime()]
             )
             ->add('surname', TextType::class, [

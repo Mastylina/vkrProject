@@ -17,22 +17,10 @@ class AboutController extends AbstractController
         $services = $serviceRepository->findAll();
         $nameService = array();
         $counts = array();
-        $averages = array();
 
         foreach ($services as $service) {
             $nameService[] = $service->getName();
             $reservations = $reservationRepository->findByServiceForReport($service);
-            $feedbacks = $feedbackRepository->findByService($service);
-            $summ = 0;
-            foreach ($feedbacks as $feedback) {
-                 $summ += $feedback->getEstimation();
-            }
-            if (count($feedbacks) === 0){
-                $averages[] = 0;
-            } else {
-                $averages[]= $summ/count($feedbacks);
-            }
-
             $counts[] = count($reservations);
         }
 

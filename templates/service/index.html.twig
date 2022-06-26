@@ -27,7 +27,11 @@
                                     услуги {{ service.price }} рублей
                                 </p>
                                 <center>
-                                <h3>Средний рейтинг {{ averages[service.name] }}</h3>
+                                    {% if averages[service.name] > 0 %}
+                                        <h3>Средний рейтинг {{ averages[service.name] }}</h3>
+                                    {% else %}
+                                        <h3>Нет оценок</h3>
+                                    {% endif %}
                                 </center>
                             </div>
                             <a href="{{ path('app_service_show', {'id': service.id}) }}"

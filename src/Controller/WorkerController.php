@@ -31,16 +31,18 @@ class WorkerController extends AbstractController
         $averages = array();
 
         foreach ($workers as $worker) {
-            $nameWorker[] = $worker->getUserWorker()->getName();
-            $feedbacks = $feedbackWorkerRepository->findByWorker($worker);
-            $summ = 0;
-            foreach ($feedbacks as $feedback) {
-                $summ += $feedback->getEstimation();
-            }
-            if (count($feedbacks) === 0) {
-                $averages[] = 0;
-            } else {
-                $averages[] = $summ / count($feedbacks);
+            if ($worker->getUserWorker()->getRoles() !== ['ROLE_ADMIN']) {
+                $nameWorker[] = $worker->getUserWorker()->getName();
+                $feedbacks = $feedbackWorkerRepository->findByWorker($worker);
+                $summ = 0;
+                foreach ($feedbacks as $feedback) {
+                    $summ += $feedback->getEstimation();
+                }
+                if (count($feedbacks) === 0) {
+                    $averages[] = 0;
+                } else {
+                    $averages[] = $summ / count($feedbacks);
+                }
             }
         }
 

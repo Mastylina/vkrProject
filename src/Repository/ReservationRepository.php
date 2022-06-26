@@ -76,6 +76,7 @@ class ReservationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.service = :service')
+            ->andWhere ('l.checked = true')
             ->setParameter('service', $service)
             ->getQuery()
             ->getResult();

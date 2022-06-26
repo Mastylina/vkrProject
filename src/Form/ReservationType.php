@@ -28,10 +28,11 @@ class ReservationType extends AbstractType
             ])
             ->add('worker', EntityType::class, [
                 'class' => Worker::class,
-                'label' => 'выберите Мастера'
+                'label' => 'Выберите Мастера'
             ])
             ->add('dateReservation', DateType::class, [
-                'widget'=> 'choice',
+                'label' => 'Выберите дату',
+                'widget'=> 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'data' => new \DateTime()
             ]);
